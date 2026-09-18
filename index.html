@@ -6,142 +6,128 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Oswald:wght@300;700&display=swap" rel="stylesheet">
   <meta property="og:title" content="Buffalo Pill">
-  <meta property="og:description" content="nobody//EVERYBODY — the new album from Buffalo Pill.">
-  <meta property="og:image" content="https://buffalopill.pages.dev/cover.jpg">
+  <meta property="og:description" content="nobody//EVERYBODY — out now from Buffalo Pill.">
+  <meta property="og:image" content="https://buffalopill.com/cover.jpg">
+  <meta property="og:url" content="https://buffalopill.com">
   <meta property="og:type" content="website">
-  <link rel="icon" href="https://buffalopill.pages.dev/favicon.png">
+  <link rel="icon" href="https://buffalopill.com/favicon.png">
   <style>
     :root {
-      --bg: #050505;
-      --red: #707070;
-      --red2: #a8a8a8;
-      --white: #e8e8e8;
-      --grey: #555;
-      --dark: #111;
-      --border: #1a1a1a;
+      --bg: #0b0a12;
+      --red: #ff2e63;
+      --red2: #ffb703;
+      --white: #f5f3fa;
+      --grey: #8d89a0;
+      --dark: #14121f;
+      --border: #241f36;
+      --gradient: linear-gradient(135deg, var(--red), var(--red2));
+      --r-sm: 10px;
+      --r-md: 20px;
+      --r-lg: 32px;
+      --r-pill: 999px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--white); font-family: 'Share Tech Mono', monospace; cursor: crosshair; overflow-x: hidden; }
+    body { background: var(--bg); color: var(--white); font-family: 'Share Tech Mono', monospace; overflow-x: hidden; }
+    #scroll-progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: var(--gradient); z-index: 100000; box-shadow: 0 0 12px rgba(255,46,99,0.6); }
+    @keyframes fade-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes stat-pop { 0% { transform: scale(1); } 40% { transform: scale(1.18); } 100% { transform: scale(1); } }
+    .stat-pop { animation: stat-pop 0.25s ease; }
 
     #loader { position: fixed; inset: 0; background: #000; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; transition: opacity 0.6s ease; }
     #loader.fade-out { opacity: 0; pointer-events: none; }
-    .loader-text { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 6vw, 4rem); letter-spacing: 8px; color: var(--red); animation: loader-glitch 1.5s infinite; }
+    .loader-text { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 6vw, 4rem); letter-spacing: 8px; color: var(--red); text-shadow: 0 0 24px rgba(255,46,99,0.5); animation: loader-pulse 1.4s ease-in-out infinite; }
     .loader-sub { font-size: 0.6rem; letter-spacing: 5px; color: #333; text-transform: uppercase; animation: blink 1s infinite; }
     .loader-bar-wrap { width: 200px; height: 1px; background: #111; position: relative; overflow: hidden; }
-    .loader-bar { position: absolute; top: 0; left: 0; height: 100%; background: var(--red); width: 0%; transition: width 0.05s linear; }
-    @keyframes loader-glitch {
-      0%, 88%, 100% { text-shadow: 2px 0 var(--red), -2px 0 rgba(175,175,175,0.4); transform: none; }
-      90% { transform: translate(-2px); text-shadow: 3px 0 var(--red2), -3px 0 rgba(195,195,195,0.5); }
-      92% { transform: translate(2px); } 94% { transform: none; }
+    .loader-bar { position: absolute; top: 0; left: 0; height: 100%; background: linear-gradient(90deg, var(--red), var(--red2)); width: 0%; transition: width 0.05s linear; }
+    @keyframes loader-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.03); }
     }
 
-    body::before { content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.13) 2px, rgba(0,0,0,0.13) 4px); pointer-events: none; z-index: 9998; }
-    body::after { content: ""; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); opacity: 0.06; pointer-events: none; z-index: 9997; animation: noise 0.2s steps(2) infinite; }
-    @keyframes noise { 0% { transform: translate(0,0); } 25% { transform: translate(-1%,1%); } 50% { transform: translate(1%,-1%); } 75% { transform: translate(-1%,-1%); } 100% { transform: translate(1%,1%); } }
-
-    /* DEAD SIGNAL DISTORTION LAYER */
-    #vhs-track { position: fixed; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, rgba(200,200,200,0.15), transparent); z-index: 9996; pointer-events: none; top: -3px; animation: vhs-sweep 11s linear infinite; }
-    @keyframes vhs-sweep { 0% { top: -3px; opacity: 0; } 3% { opacity: 0.8; } 8% { opacity: 0; } 100% { top: 100%; opacity: 0; } }
-    #signal-flash { position: fixed; inset: 0; background: #000; z-index: 99996; pointer-events: none; opacity: 0; }
-    #signal-flash.active { animation: signal-glitch 0.22s steps(1); }
-    @keyframes signal-glitch {
-      0%   { opacity: 0.9; }
-      15%  { opacity: 0; }
-      30%  { opacity: 0.7; }
-      45%  { opacity: 0; }
-      60%  { opacity: 0.5; }
-      100% { opacity: 0; }
-    }
-    body.desync { animation: body-desync 0.15s steps(1); }
-    @keyframes body-desync {
-      0%   { transform: translate(0,0); filter: none; }
-      20%  { transform: translate(-4px,1px); filter: hue-rotate(20deg) saturate(0); }
-      40%  { transform: translate(3px,-2px); }
-      60%  { transform: translate(-2px,0); filter: hue-rotate(-20deg) saturate(0); }
-      80%  { transform: translate(1px,1px); }
-      100% { transform: translate(0,0); filter: none; }
-    }
-    .glitch-text { position: relative; display: inline-block; }
-    .corrupt-char { opacity: 0.6; }
-
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 2.5rem; background: rgba(5,5,5,0.92); border-bottom: 1px solid var(--border); }
-    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 4px; color: var(--red); }
+    nav { position: fixed; top: 1.1rem; left: 1.1rem; right: 1.1rem; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.75rem; background: rgba(20,18,31,0.65); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--r-pill); box-shadow: 0 10px 40px rgba(0,0,0,0.35); }
+    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 4px; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .nav-links { display: flex; gap: 2rem; align-items: center; }
-    nav a { color: var(--grey); text-decoration: none; font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; transition: color 0.15s; }
+    nav a { color: var(--grey); text-decoration: none; font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; transition: color 0.15s; position: relative; padding-bottom: 3px; }
+    nav a:not(.nav-file)::after { content: ""; position: absolute; left: 0; bottom: -2px; width: 100%; height: 1px; background: var(--gradient); transform: scaleX(0); transform-origin: left; transition: transform 0.25s ease; }
+    nav a:not(.nav-file):hover::after { transform: scaleX(1); }
     nav a:hover { color: var(--red2); }
-    .nav-file { color: var(--red) !important; border: 1px solid var(--red); padding: 0.3rem 0.8rem; font-size: 0.6rem !important; animation: blink-border 2s infinite; }
+    .nav-file { --red: #d1273e; color: var(--red) !important; border: 1px solid var(--red); border-radius: var(--r-pill); padding: 0.35rem 0.9rem; font-size: 0.6rem !important; animation: blink-border 2s infinite; }
     .nav-file:hover { background: var(--red); color: #fff !important; }
     @keyframes blink-border { 0%, 100% { border-color: var(--red); } 50% { border-color: transparent; } }
 
     header { position: relative; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; overflow: hidden; }
-    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 60%, rgba(110,110,110,0.12) 0%, transparent 70%), linear-gradient(180deg, #050505 0%, #0d0d0d 50%, #050505 100%); }
-    .hero-img-wrap { position: relative; margin-bottom: 2rem; z-index: 2; }
-    .hero-img-wrap img { width: clamp(140px, 18vw, 220px); height: clamp(140px, 18vw, 220px); object-fit: cover; display: block; filter: grayscale(30%) contrast(1.1); border: 1px solid var(--red); box-shadow: 0 0 40px rgba(140,140,140,0.3), inset 0 0 20px rgba(0,0,0,0.5); }
-    .hero-img-wrap img:hover { animation: glitch-img 0.4s infinite; filter: grayscale(0%) contrast(1.3) hue-rotate(340deg); }
-    @keyframes glitch-img {
-      0%   { transform: translate(0); clip-path: inset(0 0 0 0); }
-      20%  { transform: translate(-3px, 1px); clip-path: inset(10% 0 80% 0); filter: hue-rotate(90deg); }
-      40%  { transform: translate(3px, -1px); clip-path: inset(60% 0 20% 0); }
-      60%  { transform: translate(-2px, 2px); clip-path: inset(30% 0 50% 0); filter: hue-rotate(180deg); }
-      80%  { transform: translate(2px, -2px); clip-path: inset(80% 0 5% 0); }
-      100% { transform: translate(0); clip-path: inset(0 0 0 0); }
-    }
-    .hero-tag { font-size: 0.65rem; letter-spacing: 5px; color: var(--red); margin-bottom: 0.75rem; z-index: 2; position: relative; }
-    h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(4rem, 12vw, 9rem); letter-spacing: 6px; line-height: 0.9; color: var(--white); z-index: 2; position: relative; text-shadow: 2px 0 0 var(--red), -2px 0 0 rgba(175,175,175,0.3); animation: text-glitch 6s infinite; }
-    @keyframes text-glitch {
-      0%, 90%, 100% { text-shadow: 2px 0 0 var(--red), -2px 0 0 rgba(175,175,175,0.3); }
-      92% { text-shadow: -3px 0 0 var(--red), 3px 0 0 rgba(175,175,175,0.4); transform: translate(2px); }
-      94% { text-shadow: 3px 0 0 var(--red2), -3px 0 0 rgba(175,175,175,0.3); transform: translate(-2px); }
-      96% { text-shadow: 2px 0 0 var(--red), -2px 0 0 rgba(175,175,175,0.3); transform: translate(0); }
-    }
-    .hero-sub { font-size: 0.7rem; letter-spacing: 6px; color: var(--grey); margin-top: 1rem; z-index: 2; position: relative; }
-    .hero-cta { margin-top: 2.5rem; z-index: 2; position: relative; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+    .hero-bg { position: absolute; inset: 0; background: linear-gradient(180deg, #0b0a12 0%, #14121f 50%, #0b0a12 100%); }
+    .hero-blobs-wrap { position: absolute; inset: 0; z-index: 0; }
+    .hero-blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.55; z-index: 0; pointer-events: none; }
+    .hero-blob-1 { width: 46vw; height: 46vw; max-width: 620px; max-height: 620px; top: -10%; left: -8%; background: radial-gradient(circle, rgba(255,46,99,0.55) 0%, transparent 70%); animation: blob-float-1 16s ease-in-out infinite; }
+    .hero-blob-2 { width: 40vw; height: 40vw; max-width: 560px; max-height: 560px; bottom: -12%; right: -10%; background: radial-gradient(circle, rgba(0,194,255,0.45) 0%, transparent 70%); animation: blob-float-2 20s ease-in-out infinite; }
+    .hero-blob-3 { width: 26vw; height: 26vw; max-width: 380px; max-height: 380px; top: 45%; left: 60%; background: radial-gradient(circle, rgba(255,183,3,0.4) 0%, transparent 70%); animation: blob-float-3 13s ease-in-out infinite; }
+    .hero-spotlight { position: absolute; width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%); pointer-events: none; z-index: 1; transform: translate(-50%, -50%); left: 50%; top: 40%; transition: opacity 0.3s ease; opacity: 0; }
+    @keyframes blob-float-1 { 0%, 100% { transform: translate(0,0) scale(1); } 50% { transform: translate(4vw, 3vh) scale(1.08); } }
+    @keyframes blob-float-2 { 0%, 100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-3vw, -4vh) scale(1.1); } }
+    @keyframes blob-float-3 { 0%, 100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-3vw, 3vh) scale(0.92); } }
+    .hero-img-wrap { position: relative; margin-bottom: 2rem; z-index: 2; animation: hero-float 5s ease-in-out infinite, fade-up 0.9s ease both; }
+    .hero-img-wrap::before { content: ""; position: absolute; inset: -8px; border-radius: calc(var(--r-lg) + 8px); background: conic-gradient(from 0deg, var(--red), var(--red2), #00c2ff, var(--red)); z-index: 0; filter: blur(3px); animation: spin-ring 5s linear infinite; }
+    @keyframes spin-ring { to { transform: rotate(360deg); } }
+    .hero-img-wrap img { width: clamp(140px, 18vw, 220px); height: clamp(140px, 18vw, 220px); object-fit: cover; display: block; position: relative; z-index: 1; border-radius: var(--r-lg); filter: contrast(1.05) saturate(1.15); border: 2px solid var(--bg); box-shadow: 0 0 40px rgba(255,46,99,0.35); transition: transform 0.35s ease, box-shadow 0.35s ease; }
+    .hero-img-wrap img:hover { transform: scale(1.045); box-shadow: 0 0 55px rgba(255,46,99,0.55), 0 0 90px rgba(0,194,255,0.25); }
+    @keyframes hero-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .hero-tag { font-size: 0.65rem; letter-spacing: 5px; color: var(--red); margin-bottom: 0.75rem; z-index: 2; position: relative; animation: fade-up 0.8s ease 0.1s both; }
+    h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(4.5rem, 13vw, 10rem); letter-spacing: 6px; line-height: 0.88; z-index: 2; position: relative; background: linear-gradient(90deg, var(--red), var(--red2), var(--red)); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 30px rgba(255,46,99,0.25)); animation: shimmer 6s linear infinite, fade-up 0.9s ease 0.2s both; }
+    @keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+    .hero-sub { font-size: 0.7rem; letter-spacing: 6px; color: var(--grey); margin-top: 1rem; z-index: 2; position: relative; animation: fade-up 0.8s ease 0.35s both; }
+    .hero-cta { margin-top: 2.5rem; z-index: 2; position: relative; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; animation: fade-up 0.8s ease 0.5s both; }
 
-    .album-banner { background: #0d0d0d; border-top: 1px solid #1c1c1c; border-bottom: 1px solid #1c1c1c; padding: 1.5rem; text-align: center; }
+    .album-banner { background: linear-gradient(180deg, rgba(255,46,99,0.06), rgba(0,194,255,0.04)); border: 1px solid var(--border); border-radius: var(--r-lg); margin: 2rem auto; max-width: 900px; padding: 2rem 1.5rem; text-align: center; position: relative; overflow: hidden; }
+    .album-banner::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gradient); }
     .album-banner-label { font-size: 0.55rem; letter-spacing: 5px; color: var(--red); text-transform: uppercase; margin-bottom: 0.75rem; display: block; }
-    .album-banner-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.5rem, 4vw, 2.5rem); letter-spacing: 6px; color: var(--white); margin-bottom: 0.5rem; }
+    .album-banner-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.5rem, 4vw, 2.5rem); letter-spacing: 6px; color: var(--red2); margin-bottom: 0.5rem; }
     .album-banner-sub { font-size: 0.6rem; letter-spacing: 3px; color: var(--grey); margin-bottom: 1rem; }
-    .album-countdown { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
-    .acd-block { text-align: center; min-width: 55px; }
-    .acd-num { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.8rem, 4vw, 2.8rem); color: var(--red2); display: block; line-height: 1; }
-    .acd-label { font-size: 0.5rem; letter-spacing: 3px; color: var(--grey); text-transform: uppercase; margin-top: 0.2rem; display: block; }
-    .acd-sep { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--border); align-self: center; padding-bottom: 0.3rem; }
 
-    .btn { display: inline-block; padding: 0.8rem 2rem; text-decoration: none; font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; transition: all 0.2s; }
-    .btn-primary { background: var(--red); color: #fff; border: 1px solid var(--red2); }
-    .btn-primary:hover { background: var(--red2); box-shadow: 0 0 20px rgba(180,180,180,0.4); }
-    .btn-ghost { background: transparent; color: var(--grey); border: 1px solid #222; }
-    .btn-ghost:hover { color: var(--white); border-color: var(--grey); }
+    .btn { display: inline-block; padding: 0.85rem 2.2rem; text-decoration: none; font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; border-radius: var(--r-pill); position: relative; overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
+    .btn::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.35), transparent 45%); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+    .btn:hover::after { opacity: 1; }
+    .btn-primary { background: var(--gradient); color: #fff; border: 1px solid transparent; box-shadow: 0 6px 24px rgba(255,46,99,0.3); }
+    .btn-primary:hover { filter: brightness(1.12); transform: translateY(-2px); box-shadow: 0 10px 32px rgba(255,46,99,0.45); }
+    .btn-ghost { background: transparent; color: var(--grey); border: 1px solid #2a2738; }
+    .btn-ghost:hover { color: var(--white); border-color: var(--grey); transform: translateY(-2px); }
     .scroll-hint { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); font-size: 0.6rem; letter-spacing: 4px; color: var(--grey); z-index: 2; animation: blink 2s infinite; }
     @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
 
-    section { max-width: 860px; margin: 0 auto; padding: clamp(4rem, 8vw, 7rem) 1.5rem; }
-    .section-label { font-size: 0.6rem; letter-spacing: 5px; color: var(--red); text-transform: uppercase; margin-bottom: 0.5rem; display: block; }
-    h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: 3px; margin-bottom: 2rem; color: var(--white); }
-    .rule { border: none; border-top: 1px solid var(--border); margin: 0; }
+    section { max-width: 900px; margin: 0 auto; padding: clamp(5rem, 10vw, 9rem) 1.5rem; }
+    .section-label { font-size: 0.65rem; letter-spacing: 5px; color: var(--red); text-transform: uppercase; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.6rem; }
+    .section-label::before { content: ""; display: inline-block; width: 22px; height: 2px; background: var(--gradient); border-radius: 2px; }
+    h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.4rem, 6vw, 4.2rem); letter-spacing: 2px; margin-bottom: 2.25rem; color: var(--white); }
+    .rule { border: none; height: 1px; background: linear-gradient(90deg, transparent, var(--border) 50%, transparent); margin: 0; }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.in-view { opacity: 1; transform: translateY(0); }
+    .games-grid .game-card:nth-child(2) { transition-delay: 0.1s; }
+    .social-grid .social-item:nth-child(2) { transition-delay: 0.08s; }
+    .social-grid .social-item:nth-child(3) { transition-delay: 0.16s; }
+    .social-grid .social-item:nth-child(4) { transition-delay: 0.24s; }
     .music-block { margin-bottom: 3rem; }
-    iframe { width: 100%; border: 0; border-radius: 0; display: block; margin-bottom: 1rem; border: 1px solid var(--border); }
+    iframe { width: 100%; border: 0; display: block; margin-bottom: 1rem; border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; }
     .btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
-    .main-vid { width: 100%; aspect-ratio: 16/9; border: 1px solid var(--border); display: block; margin-bottom: 1.5rem; }
-    .vid-toggle { background: none; border: 1px solid #222; color: var(--grey); font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; letter-spacing: 3px; padding: 0.8rem 2rem; cursor: crosshair; text-transform: uppercase; transition: all 0.2s; margin-bottom: 1.5rem; display: block; }
+    .main-vid { width: 100%; aspect-ratio: 16/9; border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; display: block; margin-bottom: 1.5rem; }
+    .vid-toggle { background: none; border: 1px solid #222; border-radius: var(--r-pill); color: var(--grey); font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; letter-spacing: 3px; padding: 0.8rem 2rem; text-transform: uppercase; transition: all 0.2s; margin-bottom: 1.5rem; display: block; }
     .vid-toggle:hover { border-color: var(--grey); color: var(--white); }
     .vid-grid { display: none; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
     .vid-grid.open { display: grid; }
     .vid-grid iframe { aspect-ratio: 16/9; height: auto; }
 
-    .legal-notice { border: 1px solid #2b2b2b; background: rgba(140,140,140,0.04); padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 0.6rem; letter-spacing: 2px; color: #595959; line-height: 1.8; }
+    .legal-notice { border: 1px solid #2b2b2b; border-radius: var(--r-sm); background: rgba(255,46,99,0.06); padding: 0.9rem 1.1rem; margin-bottom: 1rem; font-size: 0.6rem; letter-spacing: 2px; color: #b7b2c4; line-height: 1.8; }
     .legal-notice span { color: var(--red); }
 
-    .mail-block { border: 1px solid var(--border); padding: 2.5rem 2rem; position: relative; overflow: hidden; }
-    .mail-block::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--red), transparent); }
+    .mail-block { border: 1px solid var(--border); border-radius: var(--r-lg); padding: 3rem 2.25rem; position: relative; overflow: hidden; background: linear-gradient(180deg, rgba(255,46,99,0.05), transparent 60%); }
+    .mail-block::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--red), var(--red2), transparent); }
     .mail-desc { font-size: 0.7rem; letter-spacing: 2px; color: var(--grey); margin-bottom: 1.5rem; line-height: 1.8; }
     .mail-form { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-    .mail-input { flex: 1; min-width: 200px; background: #0a0a0a; border: 1px solid #222; color: var(--white); font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; letter-spacing: 2px; padding: 0.8rem 1rem; outline: none; transition: border-color 0.2s; }
+    .mail-input { flex: 1; min-width: 200px; background: #0a0a0a; border: 1px solid #222; border-radius: var(--r-pill); color: var(--white); font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; letter-spacing: 2px; padding: 0.8rem 1.3rem; outline: none; transition: border-color 0.2s; }
     .mail-input:focus { border-color: var(--red); }
     .mail-input::placeholder { color: #333; }
 
-    .merch-inner { border: 1px solid var(--border); padding: 3rem 2rem; text-align: center; position: relative; overflow: hidden; }
+    .merch-inner { border: 1px solid var(--border); border-radius: var(--r-lg); padding: 3rem 2rem; text-align: center; position: relative; overflow: hidden; background: linear-gradient(180deg, rgba(0,194,255,0.05), transparent 60%); }
     .merch-inner::before { content: "COMING SOON"; position: absolute; top: 1rem; right: -2rem; background: var(--red); color: #fff; font-size: 0.6rem; letter-spacing: 3px; padding: 0.3rem 3rem; transform: rotate(12deg); }
     .merch-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.5rem, 4vw, 3rem); letter-spacing: 4px; margin-bottom: 1rem; }
     .countdown { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 2rem 0; }
@@ -150,24 +136,24 @@
     .cd-label { font-size: 0.55rem; letter-spacing: 3px; color: var(--grey); text-transform: uppercase; margin-top: 0.3rem; display: block; }
     .cd-sep { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: var(--border); align-self: center; padding-bottom: 0.5rem; }
 
-    .social-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1px; border: 1px solid var(--border); }
-    .social-item { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1rem; text-decoration: none; color: var(--grey); border: 1px solid transparent; transition: all 0.2s; gap: 0.5rem; }
-    .social-item:hover { background: rgba(140,140,140,0.05); color: var(--white); border-color: var(--border); }
+    .social-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; }
+    .social-item { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1rem; text-decoration: none; color: var(--grey); border: 1px solid var(--border); border-radius: var(--r-md); transition: all 0.25s ease; gap: 0.5rem; }
+    .social-item:hover { background: rgba(255,46,99,0.08); color: var(--white); border-color: var(--red); transform: translateY(-4px); box-shadow: 0 12px 30px rgba(255,46,99,0.2); }
     .social-platform { font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase; }
     .social-handle { font-size: 0.75rem; color: var(--grey); }
 
     footer { border-top: 1px solid var(--border); padding: 2rem 1.5rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.6rem; letter-spacing: 3px; color: #333; }
     footer span { color: var(--red); }
 
-    .ticker-wrap { overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: #080808; padding: 0.6rem 0; }
-    .ticker-inner { display: flex; white-space: nowrap; animation: ticker 30s linear infinite; font-size: 0.6rem; letter-spacing: 4px; color: var(--red); text-transform: uppercase; }
+    .ticker-wrap { overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: #0d0c16; padding: 0.85rem 0; }
+    .ticker-inner { display: flex; white-space: nowrap; animation: ticker 30s linear infinite; font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; letter-spacing: 4px; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; text-transform: uppercase; }
     .ticker-inner span { padding: 0 3rem; }
     @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-    /* FILE 137 */
-    #file-overlay { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.97); overflow-y: auto; padding: 2rem 1rem; }
+    /* FILE 137 — kept deliberately dark / red-alert, distinct from the main site's palette */
+    #file-overlay { --red: #d1273e; --red2: #8a8a8a; display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.97); overflow-y: auto; padding: 2rem 1rem; }
     #file-overlay.open { display: block; }
-    .file-close { position: fixed; top: 1.5rem; right: 2rem; background: none; border: 1px solid #333; color: var(--grey); font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; letter-spacing: 3px; padding: 0.5rem 1rem; cursor: crosshair; text-transform: uppercase; z-index: 10000; transition: all 0.2s; }
+    .file-close { position: fixed; top: 1.5rem; right: 2rem; background: none; border: 1px solid #333; color: var(--grey); font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; letter-spacing: 3px; padding: 0.5rem 1rem; text-transform: uppercase; z-index: 10000; transition: all 0.2s; }
     .file-close:hover { border-color: var(--red); color: var(--red2); }
     #file-gate { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; gap: 1.5rem; }
     .gate-label { font-size: 0.6rem; letter-spacing: 5px; color: var(--red); text-transform: uppercase; }
@@ -241,20 +227,20 @@
     .hidden-tracklist { color: #050505; background: #050505; font-size: 0.6rem; letter-spacing: 2px; line-height: 2; padding: 0 1.5rem; user-select: text; }
 
     /* CLICKER */
-    #clicker-section { background: #020202; border-top: 1px solid #1c1c1c; position: relative; }
-    #clicker-section::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(120,120,120,0.07) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(90,90,90,0.05) 0%, transparent 60%); pointer-events: none; z-index: 0; }
+    #clicker-section { background: #08070d; border-top: 1px solid var(--border); position: relative; }
+    #clicker-section::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 20% 50%, rgba(255,46,99,0.10) 0%, transparent 60%), radial-gradient(ellipse at 80% 50%, rgba(0,194,255,0.08) 0%, transparent 60%); pointer-events: none; z-index: 0; }
     .clicker-wrap { max-width: 1000px; margin: 0 auto; padding: clamp(3rem, 5vw, 5rem) 2rem; position: relative; z-index: 1; }
     .clicker-header { text-align: center; margin-bottom: 3rem; }
     .clicker-header .section-label { display: block; margin-bottom: 0.5rem; }
-    .clicker-header h2 { margin-bottom: 0.75rem; font-size: clamp(2.5rem, 6vw, 5rem); text-shadow: 0 0 40px rgba(140,140,140,0.4); }
-    .clicker-header p { font-size: 0.6rem; letter-spacing: 4px; color: #444; }
+    .clicker-header h2 { margin-bottom: 0.75rem; font-size: clamp(2.5rem, 6vw, 5rem); text-shadow: 0 0 40px rgba(255,46,99,0.5); }
+    .clicker-header p { font-size: 0.6rem; letter-spacing: 4px; color: var(--grey); }
 
-    .clicker-stats-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: #0f0f0f; border: 1px solid #111; margin-bottom: 2.5rem; }
+    .clicker-stats-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: #0f0f0f; border: 1px solid #111; border-radius: var(--r-md); overflow: hidden; margin-bottom: 2.5rem; }
     @media (max-width: 700px) { .clicker-stats-bar { grid-template-columns: repeat(3, 1fr); } }
     @media (max-width: 450px) { .clicker-stats-bar { grid-template-columns: repeat(2, 1fr); } }
     .clicker-stat { background: #080808; padding: 1rem 1.5rem; text-align: center; position: relative; overflow: hidden; }
-    .clicker-stat::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(140,140,140,0.4), transparent); }
-    .clicker-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.6rem, 3vw, 2.2rem); color: var(--red2); display: block; line-height: 1; letter-spacing: 2px; text-shadow: 0 0 20px rgba(190,190,190,0.5); }
+    .clicker-stat::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,183,3,0.5), transparent); }
+    .clicker-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.6rem, 3vw, 2.2rem); color: var(--red2); display: block; line-height: 1; letter-spacing: 2px; text-shadow: 0 0 20px rgba(255,183,3,0.6); }
     .clicker-stat-label { font-size: 0.48rem; letter-spacing: 3px; color: #333; text-transform: uppercase; margin-top: 0.4rem; display: block; }
 
     .clicker-main { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 2rem; align-items: start; }
@@ -262,15 +248,15 @@
     .clicker-left { display: flex; flex-direction: column; align-items: center; gap: 2rem; width: 100%; }
 
     .pill-arena { position: relative; display: flex; align-items: center; justify-content: center; padding: 30px; }
-    .pill-ring { position: absolute; inset: 0; border-radius: 50%; border: 1px solid rgba(140,140,140,0.15); pointer-events: none; }
-    .pill-ring-2 { position: absolute; inset: 10px; border-radius: 50%; border: 1px dashed rgba(140,140,140,0.08); pointer-events: none; }
-    .pill-glow { position: absolute; inset: 20px; border-radius: 50%; background: radial-gradient(circle, rgba(140,140,140,0.18) 0%, transparent 70%); animation: glow-pulse 2.5s ease-in-out infinite; pointer-events: none; }
+    .pill-ring { position: absolute; inset: 0; border-radius: 50%; border: 1px solid rgba(255,46,99,0.25); pointer-events: none; }
+    .pill-ring-2 { position: absolute; inset: 10px; border-radius: 50%; border: 1px dashed rgba(255,183,3,0.18); pointer-events: none; }
+    .pill-glow { position: absolute; inset: 20px; border-radius: 50%; background: radial-gradient(circle, rgba(255,46,99,0.28) 0%, transparent 70%); animation: glow-pulse 2.5s ease-in-out infinite; pointer-events: none; }
     @keyframes glow-pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
 
-    #pill-btn { width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #3c3c3c 0%, #101010 45%, #000 100%); border: 2px solid var(--red); box-shadow: 0 0 0 4px rgba(140,140,140,0.08), 0 0 40px rgba(140,140,140,0.3), 0 0 80px rgba(140,140,140,0.1), inset 0 0 30px rgba(0,0,0,0.9); cursor: crosshair; font-family: 'Bebas Neue', sans-serif; letter-spacing: 4px; color: var(--red2); transition: box-shadow 0.1s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; position: relative; user-select: none; z-index: 2; }
-    #pill-btn:hover { box-shadow: 0 0 0 4px rgba(140,140,140,0.15), 0 0 60px rgba(140,140,140,0.5), 0 0 100px rgba(140,140,140,0.2), inset 0 0 30px rgba(0,0,0,0.9); }
-    #pill-btn:active { box-shadow: 0 0 20px rgba(140,140,140,0.6), inset 0 0 40px rgba(0,0,0,0.95); }
-    #pill-btn .pill-icon { font-size: 3rem; line-height: 1; filter: drop-shadow(0 0 8px rgba(190,190,190,0.8)); }
+    #pill-btn { width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #2a1a30 0%, #150a1c 45%, #05030a 100%); border: 2px solid var(--red); box-shadow: 0 0 0 4px rgba(255,46,99,0.10), 0 0 40px rgba(255,46,99,0.35), 0 0 80px rgba(255,46,99,0.15), inset 0 0 30px rgba(0,0,0,0.9); font-family: 'Bebas Neue', sans-serif; letter-spacing: 4px; color: var(--red2); transition: box-shadow 0.1s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; position: relative; user-select: none; z-index: 2; }
+    #pill-btn:hover { box-shadow: 0 0 0 4px rgba(255,46,99,0.2), 0 0 60px rgba(255,46,99,0.6), 0 0 100px rgba(255,46,99,0.3), inset 0 0 30px rgba(0,0,0,0.9); }
+    #pill-btn:active { box-shadow: 0 0 20px rgba(255,46,99,0.7), inset 0 0 40px rgba(0,0,0,0.95); }
+    #pill-btn .pill-icon { font-size: 3rem; line-height: 1; filter: drop-shadow(0 0 8px rgba(255,183,3,0.9)); }
     #pill-btn .pill-label { font-size: 0.6rem; letter-spacing: 4px; color: #5c5c5c; }
     #pill-btn .pill-count { font-size: 0.5rem; letter-spacing: 2px; color: #353535; }
 
@@ -293,14 +279,14 @@
     .clicker-news-inner { font-size: 0.5rem; letter-spacing: 3px; color: #2a2a2a; white-space: nowrap; animation: ticker 25s linear infinite; padding: 0.6rem 0.6rem 0.6rem 6rem; }
 
     .clicker-right { display: flex; flex-direction: column; gap: 0; }
-    .upgrades-header { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: #080808; border: 1px solid #111; border-bottom: none; }
+    .upgrades-header { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: #080808; border: 1px solid #111; border-bottom: none; border-radius: var(--r-md) var(--r-md) 0 0; }
     .upgrades-header-label { font-size: 0.5rem; letter-spacing: 4px; color: var(--red); }
-    #current-pills-display { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--red2); text-shadow: 0 0 10px rgba(190,190,190,0.4); }
+    #current-pills-display { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--red2); text-shadow: 0 0 10px rgba(255,183,3,0.5); }
     #upgrades-container { border: 1px solid #111; display: flex; flex-direction: column; gap: 1px; background: #0a0a0a; min-height: 200px; overflow-y: auto; }
     #upgrades-container::-webkit-scrollbar { width: 3px; }
     #upgrades-container::-webkit-scrollbar-track { background: #050505; }
     #upgrades-container::-webkit-scrollbar-thumb { background: #2b2b2b; }
-    .upgrade-btn { width: 100%; background: #060606; border: none; border-left: 2px solid transparent; color: #444; font-family: 'Share Tech Mono', monospace; font-size: 0.58rem; letter-spacing: 1.5px; padding: 0.8rem 1rem; cursor: crosshair; text-align: left; transition: all 0.12s; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; }
+    .upgrade-btn { width: 100%; background: #060606; border: none; border-left: 2px solid transparent; color: #444; font-family: 'Share Tech Mono', monospace; font-size: 0.58rem; letter-spacing: 1.5px; padding: 0.8rem 1rem; text-align: left; transition: all 0.12s; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; }
     .upgrade-btn:hover:not([disabled]) { background: #101010; border-left-color: var(--red); color: var(--white); }
     .upgrade-btn[disabled] { opacity: 0.25; cursor: not-allowed; }
     .upgrade-btn.can-afford { color: #777; border-left-color: #353535; }
@@ -312,21 +298,21 @@
     .upgrade-btn.can-afford .upgrade-desc { color: #3a3a3a; }
     .upgrade-right { text-align: right; flex-shrink: 0; }
     .upgrade-cost-num { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; color: #5c5c5c; display: block; line-height: 1; }
-    .upgrade-btn.can-afford .upgrade-cost-num { color: var(--red); text-shadow: 0 0 8px rgba(140,140,140,0.4); }
+    .upgrade-btn.can-afford .upgrade-cost-num { color: var(--red); text-shadow: 0 0 8px rgba(255,46,99,0.5); }
     .upgrade-count-badge { font-size: 0.4rem; letter-spacing: 2px; color: #353535; display: block; margin-top: 2px; }
     .upgrade-owned-tag { font-size: 0.4rem; letter-spacing: 3px; color: #1f1f1f; }
 
     .prestige-zone { border: 1px solid #1c1c1c; border-top: none; padding: 1.25rem 1rem; text-align: center; background: #070707; position: relative; overflow: hidden; }
     .prestige-zone::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--red), transparent); }
     .prestige-label { font-size: 0.48rem; letter-spacing: 4px; color: #454545; display: block; margin-bottom: 0.75rem; }
-    #prestige-btn { background: none; border: 1px solid #353535; color: #5c5c5c; font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; letter-spacing: 3px; padding: 0.6rem 1.5rem; cursor: crosshair; text-transform: uppercase; transition: all 0.2s; display: block; width: 100%; }
-    #prestige-btn:not([disabled]):hover { background: var(--red); border-color: var(--red2); color: #fff; box-shadow: 0 0 20px rgba(140,140,140,0.4); }
+    #prestige-btn { background: none; border: 1px solid #353535; color: #5c5c5c; font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; letter-spacing: 3px; padding: 0.6rem 1.5rem; text-transform: uppercase; transition: all 0.2s; display: block; width: 100%; }
+    #prestige-btn:not([disabled]):hover { background: var(--red); border-color: var(--red2); color: #fff; box-shadow: 0 0 20px rgba(255,46,99,0.5); }
     #prestige-btn[disabled] { opacity: 0.2; cursor: not-allowed; }
     .prestige-sub { font-size: 0.45rem; letter-spacing: 2px; color: #222; margin-top: 0.6rem; display: block; line-height: 1.8; }
     #prestige-count { color: #5c5c5c; font-family: 'Bebas Neue', sans-serif; font-size: 0.8rem; }
 
     /* PRESTIGE REWARDS */
-    .prestige-rewards { border: 1px solid #1c1c1c; border-top: none; padding: 1rem; background: #060606; }
+    .prestige-rewards { border: 1px solid #1c1c1c; border-top: none; border-radius: 0 0 var(--r-md) var(--r-md); padding: 1rem; background: #060606; overflow: hidden; }
     .prestige-rewards-label { font-size: 0.45rem; letter-spacing: 4px; color: #353535; display: block; margin-bottom: 0.75rem; }
     .prestige-reward-item { display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0; border-bottom: 1px solid #101010; opacity: 0.25; transition: opacity 0.4s; }
     .prestige-reward-item.unlocked { opacity: 1; }
@@ -337,9 +323,37 @@
     .prestige-reward-req { font-size: 0.4rem; letter-spacing: 2px; color: #222; display: block; }
 
     /* GRANDMA KANYE */
-    #grandma-kanye { display: none; position: fixed; width: 130px; height: 130px; object-fit: cover; z-index: 8000; pointer-events: none; border: 2px solid #1c1c1c; box-shadow: 0 0 20px rgba(140,140,140,0.4); transition: left 2.5s ease-in-out, top 2.5s ease-in-out, opacity 0.6s ease; }
+    #grandma-kanye { display: none; position: fixed; width: 130px; height: 130px; object-fit: cover; z-index: 8000; pointer-events: none; border: 2px solid #1c1c1c; box-shadow: 0 0 20px rgba(0,194,255,0.5); transition: left 2.5s ease-in-out, top 2.5s ease-in-out, opacity 0.6s ease; }
 
-    /* PRESTIGE TOAST */
+    /* PKPD MODAL (replaces native alert() popups) */
+    .pkpd-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 20000; display: none; align-items: center; justify-content: center; padding: 1.5rem; }
+    .pkpd-modal.open { display: flex; }
+    .pkpd-modal-box { background: #0a0812; border: 1px solid var(--red); border-radius: var(--r-md); padding: 2rem; max-width: 380px; text-align: center; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.5); animation: fade-up 0.3s ease; }
+    .pkpd-modal-close { position: absolute; top: 0.6rem; right: 0.9rem; background: none; border: none; color: var(--grey); font-size: 1.1rem; cursor: pointer; }
+    .pkpd-modal-close:hover { color: var(--white); }
+    .pkpd-modal-label { font-size: 0.55rem; letter-spacing: 3px; color: var(--red); margin-bottom: 0.9rem; }
+    .pkpd-modal-text { font-size: 0.7rem; letter-spacing: 1px; color: var(--white); line-height: 1.9; }
+
+    /* AMBIENT HERO PARTICLES */
+    .hero-particle { position: absolute; font-size: 1rem; opacity: 0; pointer-events: none; z-index: 1; animation: particle-float linear infinite; }
+    @keyframes particle-float { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 8% { opacity: 0.55; } 92% { opacity: 0.5; } 100% { transform: translateY(-95vh) rotate(340deg); opacity: 0; } }
+    .leaderboard-panel { border: 1px solid #1c1c1c; border-top: none; padding: 1rem; background: #060606; }
+    .leaderboard-row-input { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+    .leaderboard-input { flex: 1; min-width: 0; background: #0a0a0a; border: 1px solid #222; color: var(--white); font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; letter-spacing: 1px; padding: 0.55rem 0.8rem; border-radius: var(--r-pill); outline: none; }
+    .leaderboard-input:focus { border-color: var(--red); }
+    .leaderboard-status { font-size: 0.48rem; letter-spacing: 1.5px; min-height: 1.4em; margin-bottom: 0.5rem; }
+    .leaderboard-status.error { color: var(--red); }
+    .leaderboard-status.ok { color: #57f287; }
+    .leaderboard-submit { width: 100%; margin-bottom: 0.75rem; font-size: 0.55rem !important; padding: 0.55rem !important; }
+    .leaderboard-list { display: flex; flex-direction: column; gap: 2px; max-height: 240px; overflow-y: auto; }
+    .leaderboard-list::-webkit-scrollbar { width: 3px; }
+    .leaderboard-list::-webkit-scrollbar-thumb { background: #2b2b2b; }
+    .leaderboard-row { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.4rem 0.6rem; background: #0a0a0a; font-size: 0.55rem; letter-spacing: 1px; color: #777; border-left: 2px solid transparent; }
+    .leaderboard-row.me { border-left-color: var(--red); color: var(--white); background: #120a10; }
+    .leaderboard-rank { color: var(--red2); font-family: 'Bebas Neue', sans-serif; font-size: 0.8rem; min-width: 1.4em; }
+    .leaderboard-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .leaderboard-score { color: var(--grey); font-size: 0.5rem; }
+    .leaderboard-empty { font-size: 0.55rem; letter-spacing: 1px; color: #333; padding: 0.5rem; text-align: center; }
     .prestige-toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: #0d0d0d; border: 1px solid var(--red); color: var(--red2); font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 4px; padding: 0.75rem 2rem; z-index: 99998; white-space: nowrap; animation: toast-in 0.3s ease; pointer-events: none; }
     @keyframes toast-in { from { opacity: 0; transform: translateX(-50%) translateY(-10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 
@@ -354,18 +368,18 @@
     #games { max-width: none; padding: 0; }
     .games-intro { max-width: 860px; margin: 0 auto; padding: clamp(4rem, 8vw, 7rem) 1.5rem 2rem; }
     .games-grid { max-width: 900px; margin: 0 auto 4rem; padding: 0 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
-    .game-card { border: 1px solid var(--border); background: #060606; padding: 2rem 1.5rem; text-align: center; position: relative; overflow: hidden; transition: border-color 0.2s; }
-    .game-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--red), transparent); opacity: 0; transition: opacity 0.2s; }
-    .game-card:hover { border-color: var(--grey); }
+    .game-card { border: 1px solid var(--border); border-radius: var(--r-lg); background: #0c0a14; padding: 2.25rem 1.5rem; text-align: center; position: relative; overflow: hidden; transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease; }
+    .game-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gradient); opacity: 0; transition: opacity 0.2s; }
+    .game-card:hover { border-color: var(--red); transform: translateY(-6px); box-shadow: 0 16px 40px rgba(255,46,99,0.2); }
     .game-card:hover::before { opacity: 1; }
-    .game-card-icon { font-size: 2.5rem; margin-bottom: 1rem; filter: grayscale(60%); }
+    .game-card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
     .game-card-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 3px; color: var(--white); margin-bottom: 0.75rem; }
     .game-card-desc { font-size: 0.6rem; letter-spacing: 1.5px; color: var(--grey); line-height: 1.9; margin-bottom: 1.5rem; min-height: 3.4em; }
-    .games-back { background: none; border: 1px solid #222; color: var(--grey); font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; padding: 0.6rem 1.2rem; cursor: crosshair; text-transform: uppercase; transition: all 0.2s; margin: 0 auto 1.5rem; display: block; width: fit-content; }
+    .games-back { background: none; border: 1px solid #222; border-radius: var(--r-pill); color: var(--grey); font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; padding: 0.6rem 1.2rem; text-transform: uppercase; transition: all 0.2s; margin: 0 auto 1.5rem; display: block; width: fit-content; }
     .games-back:hover { border-color: var(--grey); color: var(--white); }
     .game-view { padding: 0 1.5rem 4rem; }
     #tycoon-view .game-view-inner { max-width: 1300px; margin: 0 auto; }
-    #tycoon-frame { width: 100%; height: 80vh; min-height: 560px; border: 1px solid var(--border); background: #000; display: block; }
+    #tycoon-frame { width: 100%; height: 80vh; min-height: 560px; border: 1px solid var(--border); border-radius: var(--r-md); background: #000; display: block; }
     .tycoon-note { font-size: 0.55rem; letter-spacing: 1.5px; color: #333; text-align: center; margin-top: 1rem; line-height: 1.8; }
 
     @media (max-width: 700px) {
@@ -390,12 +404,77 @@
       .clicker-wrap { padding: 2.5rem 1rem; }
       #grandma-kanye { width: 90px; height: 90px; }
     }
+    .discord-banner { display: flex; align-items: center; gap: 1.75rem; flex-wrap: wrap; justify-content: space-between; max-width: 900px; margin: 1.5rem auto 2rem; padding: 2rem 2.25rem; border-radius: var(--r-lg); background: linear-gradient(135deg, rgba(88,101,242,0.22), rgba(255,46,99,0.10)); border: 1px solid rgba(88,101,242,0.45); position: relative; overflow: hidden; }
+    .discord-banner::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #5865F2, var(--red2)); }
+    .discord-banner-left { display: flex; align-items: center; gap: 1.25rem; }
+    .discord-banner-icon { font-size: 2.5rem; filter: drop-shadow(0 0 16px rgba(88,101,242,0.6)); animation: hero-float 4s ease-in-out infinite; }
+    .discord-banner-label { font-size: 0.6rem; letter-spacing: 4px; color: #8ea1ff; text-transform: uppercase; display: block; margin-bottom: 0.4rem; }
+    .discord-banner-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.5rem, 4vw, 2.2rem); letter-spacing: 3px; color: var(--white); }
+    .discord-banner-sub { font-size: 0.65rem; letter-spacing: 1.5px; color: var(--grey); margin-top: 0.4rem; max-width: 420px; line-height: 1.7; }
+    .discord-btn { background: linear-gradient(135deg, #5865F2, #7289DA); box-shadow: 0 6px 24px rgba(88,101,242,0.4); flex-shrink: 0; }
+    .discord-btn:hover { filter: brightness(1.15); box-shadow: 0 10px 32px rgba(88,101,242,0.55); }
+    @media (max-width: 600px) { .discord-banner { justify-content: center; text-align: center; } .discord-banner-left { flex-direction: column; } }
+    /* ROADMAP TEASERS */
+    .roadmap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+    .roadmap-card { border: 1px solid var(--border); border-radius: var(--r-md); background: #0a0812; padding: 1.5rem; position: relative; overflow: hidden; }
+    .roadmap-card::before { content: "CLASSIFIED"; position: absolute; top: 0.9rem; right: -2.1rem; background: var(--red); color: #fff; font-size: 0.5rem; letter-spacing: 3px; padding: 0.2rem 2.5rem; transform: rotate(35deg); opacity: 0.85; }
+    .roadmap-tag { font-size: 0.5rem; letter-spacing: 3px; color: var(--red2); text-transform: uppercase; display: block; margin-bottom: 0.6rem; }
+    .roadmap-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 2px; color: var(--white); margin-bottom: 0.5rem; }
+    .roadmap-desc { font-size: 0.6rem; letter-spacing: 1px; color: var(--grey); line-height: 1.8; }
+
+    /* PKPD WANTED BOARD */
+    .wanted-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+    .wanted-card { border: 1px solid #2a2a2a; border-radius: var(--r-md); background: #070707; padding: 1.5rem; text-align: center; transition: transform 0.25s ease, border-color 0.25s ease; }
+    .wanted-card:hover { transform: translateY(-4px); border-color: var(--red); }
+    .wanted-badge { display: inline-block; font-size: 0.5rem; letter-spacing: 2px; padding: 0.2rem 0.6rem; border-radius: var(--r-pill); background: rgba(255,46,99,0.15); color: var(--red2); margin-bottom: 0.75rem; }
+    .wanted-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 2px; color: var(--white); margin-bottom: 0.5rem; }
+    .wanted-desc { font-size: 0.58rem; letter-spacing: 1px; color: var(--grey); line-height: 1.8; }
+
+    /* LORE MAP */
+    .lore-map-wrap { border: 1px solid var(--border); border-radius: var(--r-lg); background: #08070d; padding: 1.5rem; margin-top: 2rem; overflow: hidden; }
+    .lore-map-wrap svg { width: 100%; height: auto; display: block; }
+    .map-pin { cursor: pointer; }
+    .map-pin circle { transition: r 0.2s ease; }
+    .map-pin:hover circle { r: 9; }
+    .map-pin text { font-family: 'Share Tech Mono', monospace; font-size: 6px; fill: var(--grey); }
+    .map-pin:hover text { fill: var(--white); }
+
+    /* LYRICS ARCHIVE */
+    .lyrics-accordion { border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; margin-top: 1rem; }
+    .lyrics-row { border-bottom: 1px solid var(--border); }
+    .lyrics-row:last-child { border-bottom: none; }
+    .lyrics-row-toggle { width: 100%; background: #0a0812; border: none; color: var(--white); font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; letter-spacing: 1.5px; padding: 1rem 1.25rem; text-align: left; display: flex; justify-content: space-between; align-items: center; transition: background 0.2s; }
+    .lyrics-row-toggle:hover { background: #120e1c; }
+    .lyrics-row-arrow { color: var(--red2); transition: transform 0.25s ease; }
+    .lyrics-row.open .lyrics-row-arrow { transform: rotate(90deg); }
+    .lyrics-row-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; background: #050408; }
+    .lyrics-row.open .lyrics-row-body { max-height: 200px; }
+    .lyrics-row-body p { padding: 1rem 1.25rem; font-size: 0.6rem; letter-spacing: 1px; color: var(--grey); line-height: 1.9; }
+
+    /* SHOWS */
+    .shows-empty { border: 1px dashed var(--border); border-radius: var(--r-md); padding: 2.5rem 2rem; text-align: center; }
+    .shows-empty p { font-size: 0.65rem; letter-spacing: 1.5px; color: var(--grey); line-height: 1.9; margin-bottom: 1.25rem; }
+
+    /* PRESS / EPK */
+    .press-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1px; background: var(--border); border-radius: var(--r-md); overflow: hidden; margin: 1.5rem 0; }
+    .press-fact { background: #0a0812; padding: 1.25rem 1.5rem; }
+    .press-fact-label { font-size: 0.5rem; letter-spacing: 3px; color: var(--red2); text-transform: uppercase; display: block; margin-bottom: 0.4rem; }
+    .press-fact-value { font-size: 0.7rem; letter-spacing: 1px; color: var(--white); }
+
+    /* DISCORD LIVE COUNT */
+    .discord-live { font-size: 0.55rem; letter-spacing: 2px; color: #8ea1ff; margin-top: 0.5rem; display: flex; align-items: center; gap: 0.4rem; }
+    .discord-live-dot { width: 6px; height: 6px; border-radius: 50%; background: #57f287; box-shadow: 0 0 6px #57f287; }
+
+    /* BETA 2.0 TEASER */
+    .beta-teaser { max-width: 900px; margin: 0 auto 3rem; padding: 0 1.5rem; }
+    .beta-teaser-inner { border: 1px dashed var(--border); border-radius: var(--r-md); padding: 1.5rem 1.75rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .beta-teaser-label { font-size: 0.55rem; letter-spacing: 3px; color: var(--red2); text-transform: uppercase; display: block; margin-bottom: 0.4rem; }
+    .beta-teaser-text { font-size: 0.6rem; letter-spacing: 1px; color: var(--grey); line-height: 1.8; max-width: 500px; }
   </style>
 </head>
 <body>
 
-<div id="vhs-track"></div>
-<div id="signal-flash"></div>
+<div id="scroll-progress"></div>
 
 <div id="loader">
   <div class="loader-text">BUFFALO PILL</div>
@@ -405,6 +484,13 @@
 
 <!-- FILE 137 OVERLAY -->
 <div id="file-overlay">
+  <div class="pkpd-modal" id="pkpd-modal">
+    <div class="pkpd-modal-box">
+      <button class="pkpd-modal-close" onclick="closePkpdModal()">✕</button>
+      <div class="pkpd-modal-label">// PKPD FIELD NOTE //</div>
+      <div class="pkpd-modal-text" id="pkpd-modal-text"></div>
+    </div>
+  </div>
   <button class="file-close" onclick="closeFile()">[ CLOSE ]</button>
   <div id="file-gate">
     <div class="gate-label">// PKPD RESTRICTED ACCESS //</div>
@@ -484,8 +570,87 @@
     <div class="doc-section"><div class="doc-section-header"><div class="doc-section-num">SECTION 03</div><div class="doc-section-title">KNOWN ASSOCIATES</div></div><div class="doc-section-body"><p><span class="doc-highlight">MK ULTRA</span> — Listed on streaming platforms under this alias. Underground rapper and known criminal. Met subject at an undisclosed location. Their partnership produced crimes of note, most memorably in Las Vegas. Current whereabouts: <span class="redacted">████████████, CA</span>. Active investigation.</p><p><span class="doc-highlight">MC TWIXX</span> — Streaming alias. Met subject at undisclosed event. Subject later produced derogatory content directed at MC Twixx. Twixx reportedly believed the slides came from his wife due to being under the influence of nitrous oxide at the time, subsequently entering a documented public breakdown about <span class="doc-highlight">Twix bars</span>. Incident unresolved.</p><p><span class="doc-highlight">MEXICAN MICHAEL JACKSON</span> — Two conjoined twins separated at birth who independently arrived at the same rap alias. Both make music. PKPD psychologists describe their dynamic with subject as <em>"symbiotic and concerning."</em> Appears on REAGANOMICS II. Background check inconclusive.</p></div></div>
     <div class="doc-section"><div class="doc-section-header"><div class="doc-section-num">SECTION 04</div><div class="doc-section-title">ASSOCIATE: BRYDN — FULL DOSSIER</div></div><div class="doc-section-body"><div class="brydn-threat">THREAT CLASSIFICATION: UNKNOWN / POTENTIALLY HIGHEST ON RECORD</div><p>BRYDN is the single most difficult individual PKPD has ever attempted to investigate. What follows is not a complete profile. It is everything we have. It is not enough.</p><p>BRYDN does not appear in any government database. No birth record. No social security number. No known address. No known last name. No known face. Three separate PKPD officers submitted identical resignation letters on the same morning in <span class="redacted">20██</span>. The letters contained only the phrase: <em>"I know what I heard."</em></p></div><div class="brydn-files"><div class="brydn-file"><span class="brydn-file-label">// KNOWN FACTS</span><div class="brydn-file-content">— BRYDN appears on MANUFACTURED CONSENT.<br>— No recording session with BRYDN has ever been photographed.<br>— Engineers present describe experience as "fine, normal, nothing weird" in a tone PKPD analysts describe as "rehearsed."<br>— BRYDN's voice analyzed by three labs. All returned: <span class="redacted">████████████████████████</span></div></div><div class="brydn-file"><span class="brydn-file-label">// THEORIES (UNCONFIRMED)</span><div class="brydn-file-content">— BRYDN may not be one person.<br>— BRYDN may not be a person.<br>— One analyst suggested BRYDN is the reason Buffalo Pill cannot be killed by conventional means. This analyst has since been <span class="redacted">██████████████</span>.<br>— PKPD working theory: BRYDN knows something. We do not want to find out what.</div></div><div class="brydn-file"><span class="brydn-file-label">// PKPD COMMUNICATION LOG</span><div class="brydn-file-content">Attempt 1: Phone disconnected.<br>Attempt 2: Email bounced. Domain did not exist.<br>Attempt 3: Officer dispatched. Returned 40 minutes later with no memory of leaving.<br>Attempt 4–<span class="redacted">██</span>: <span class="redacted">████████████████████████████████████████████████████</span><br><br>Current status: We have left a voicemail. We do not expect a callback.</div></div></div><div class="doc-section-body" style="border-top:1px solid #1a1a1a;"><p>MANUFACTURED CONSENT is the first album to feature BRYDN on the title track itself. PKPD considers this <span class="doc-highlight">significant</span>. We do not yet know what it means. We are scared.</p></div></div>
     <div class="doc-section"><div class="doc-section-header"><div class="doc-section-num">SECTION 05</div><div class="doc-section-title">PSYCHOLOGICAL PROFILE</div></div><div class="doc-section-body"><p>Subject presents as <span class="doc-highlight">perpetually angry</span> with documented episodes of emotional vulnerability. He is afraid of two things: <span class="doc-highlight">losing</span>, and <span class="doc-highlight">being made fun of</span>.</p><p>Subject has been married twice. Both marriages ended under circumstances PKPD has declined to document. He owns a dog named <span class="doc-highlight">Scooby Doo</span>, whom he loves unconditionally. Agents report his demeanor in the presence of the dog is <em>"completely different. Like a different guy entirely. It's weird."</em></p><p>Subject also maintains a deep personal attachment to his <span class="doc-highlight">knife</span>. Forensics have declined to run further tests on it.</p></div></div>
-    <div class="doc-section"><div class="doc-section-header"><div class="doc-section-num">SECTION 06</div><div class="doc-section-title">DISCOGRAPHY / EVIDENCE LOG</div></div><div class="doc-section-body"><p>Subject has used rap music as a vehicle for self-documentation. Analysts note output is <em>"disturbingly self-aware for someone who has done the things he has done."</em></p></div><div class="doc-discography"><div class="doc-disco-item"><div class="doc-disco-title">LILLARD'S REVENGE</div><div class="doc-disco-desc">Original SoundCloud release. Removed after 72 hours. Later re-uploaded as <span style="color:var(--white);">EVIL MAN</span>. Coordinates in lyrics lead to locations in Pillkill, NV. PKPD sent a team. They did not find what they expected.</div></div><div class="doc-disco-item"><div class="doc-disco-title">MY GOSPEL</div><div class="doc-disco-desc">First major release. Love songs written by a man with no family left to love. Charted in <span class="redacted">██</span> countries.</div></div><div class="doc-disco-item"><div class="doc-disco-title">SNAKE EATER</div><div class="doc-disco-desc">Depicts subject at his lowest point. Introduces Mexican Michael Jackson. First confirmed appearance of BRYDN in the credits, listed under a role that does not exist.</div></div><div class="doc-disco-item"><div class="doc-disco-title">CIVIL WAR BUT IRL</div><div class="doc-disco-desc">Explores guilt for the first time. Active beef with MK ULTRA. Features a track PKPD believes contains an encoded confession — still decoding.</div></div><div class="doc-disco-item"><div class="doc-disco-title">MANUFACTURED CONSENT</div><div class="doc-disco-desc">NOW AVAILABLE. Released June 2026. Features BRYDN on the title track. Track 07 (RADIO SILENT) removed prior to release for legal reasons. The dream does not end.</div></div><div class="doc-disco-item"><div class="doc-disco-title">RADIO SILENT</div><div class="doc-disco-desc">SUPPRESSED. Was track 07 on MANUFACTURED CONSENT. Removed for <span class="redacted">██████████████████████████</span> reasons. Music video available on YouTube. No one is allowed to comment on the removal.</div></div><div class="doc-disco-item"><div class="doc-disco-title">nobody//EVERYBODY</div><div class="doc-disco-desc">INCOMING. Subject appears to be entering a new phase — PKPD analysts describe the shift as "fragmented." Twelve tracks. Features BRYDN associates MK ULTRA, MC TWIXX, CID KUDI, DRIZZY DROZZ, SHAMAMA, and FELONY STEVE. Two tracks are titled "Ghost." We do not know why there are two. We asked. We were told not to ask again.</div></div></div></div>
-    <div class="doc-section"><div class="doc-section-header"><div class="doc-section-num">SECTION 07</div><div class="doc-section-title">PILLKILL, NV — LOCATION REPORT</div></div><div class="doc-section-body"><p>Pillkill, Nevada does not exist according to any official record. It does not appear on any map. And yet it is listed as subject's hometown on three streaming platforms. Two officers dispatched to investigate did not return. Their vehicles were found 40 miles outside <span class="redacted">████████</span>, NV, engines running, doors open.</p><p>Current PKPD position: Pillkill is real. We do not recommend visiting. Stop thinking about it.</p></div></div>
+    <div class="doc-section"><div class="doc-section-header"><div class="doc-section-num">SECTION 06</div><div class="doc-section-title">DISCOGRAPHY / EVIDENCE LOG</div></div><div class="doc-section-body"><p>Subject has used rap music as a vehicle for self-documentation. Analysts note output is <em>"disturbingly self-aware for someone who has done the things he has done."</em></p></div><div class="doc-discography"><div class="doc-disco-item"><div class="doc-disco-title">LILLARD'S REVENGE</div><div class="doc-disco-desc">Original SoundCloud release. Removed after 72 hours. Later re-uploaded as <span style="color:var(--white);">EVIL MAN</span>. Coordinates in lyrics lead to locations in Pillkill, NV. PKPD sent a team. They did not find what they expected.</div></div><div class="doc-disco-item"><div class="doc-disco-title">MY GOSPEL</div><div class="doc-disco-desc">First major release. Love songs written by a man with no family left to love. Charted in <span class="redacted">██</span> countries.</div></div><div class="doc-disco-item"><div class="doc-disco-title">SNAKE EATER</div><div class="doc-disco-desc">Depicts subject at his lowest point. Introduces Mexican Michael Jackson. First confirmed appearance of BRYDN in the credits, listed under a role that does not exist.</div></div><div class="doc-disco-item"><div class="doc-disco-title">CIVIL WAR BUT IRL</div><div class="doc-disco-desc">Explores guilt for the first time. Active beef with MK ULTRA. Features a track PKPD believes contains an encoded confession — still decoding.</div></div><div class="doc-disco-item"><div class="doc-disco-title">MANUFACTURED CONSENT</div><div class="doc-disco-desc">RELEASED. June 2026. Features BRYDN on the title track. Track 07 (RADIO SILENT) removed prior to release for legal reasons. The dream does not end.</div></div><div class="doc-disco-item"><div class="doc-disco-title">RADIO SILENT</div><div class="doc-disco-desc">SUPPRESSED. Was track 07 on MANUFACTURED CONSENT. Removed for <span class="redacted">██████████████████████████</span> reasons. Music video available on YouTube. No one is allowed to comment on the removal.</div></div><div class="doc-disco-item"><div class="doc-disco-title">nobody//EVERYBODY</div><div class="doc-disco-desc">OUT NOW. Subject has entered a new phase — PKPD analysts describe the shift as "fragmented." Twelve tracks, including one whose title we are not permitted to reprint in full in an official filing. We are calling it Track 03. Everyone knows what it's called.</div></div></div></div>
+    <div class="doc-section"><div class="doc-section-header"><div class="doc-section-num">SECTION 07</div><div class="doc-section-title">PILLKILL, NV — LOCATION REPORT</div></div><div class="doc-section-body"><p>Pillkill, Nevada does not exist according to any official record. It does not appear on any map. And yet it is listed as subject's hometown on three streaming platforms. Two officers dispatched to investigate did not return. Their vehicles were found 40 miles outside <span class="redacted">████████</span>, NV, engines running, doors open.</p><p>Current PKPD position: Pillkill is real. We do not recommend visiting. Stop thinking about it.</p>
+      <div class="lore-map-wrap">
+        <span class="section-label" style="margin-bottom:1rem;">// INTERCEPTED SURVEILLANCE MAP</span>
+        <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="0" width="600" height="300" fill="#0b0a12"/>
+          <path d="M0,220 L120,190 L220,230 L340,180 L460,215 L600,190 L600,300 L0,300 Z" fill="#12101d"/>
+          <line x1="0" y1="120" x2="600" y2="140" stroke="#241f36" stroke-width="1"/>
+          <line x1="80" y1="0" x2="140" y2="300" stroke="#241f36" stroke-width="1"/>
+          <line x1="420" y1="0" x2="460" y2="300" stroke="#241f36" stroke-width="1"/>
+          <g class="map-pin" onclick="openPkpdModal('PKPD HQ — case files are not stored digitally. Do not ask why.')">
+            <circle cx="150" cy="130" r="6" fill="#ff2e63"/>
+            <text x="162" y="134">PKPD HQ</text>
+          </g>
+          <g class="map-pin" onclick="openPkpdModal('Site of Incident 04. Evidence remains classified.')">
+            <circle cx="320" cy="90" r="6" fill="#ffb703"/>
+            <text x="332" y="94">INCIDENT SITE 04</text>
+          </g>
+          <g class="map-pin" onclick="openPkpdModal('Grandma Kanye was last seen here. She was fine. Probably.')">
+            <circle cx="460" cy="160" r="6" fill="#00c2ff"/>
+            <text x="472" y="164">LAST GK SIGHTING</text>
+          </g>
+          <g class="map-pin" onclick="openPkpdModal('The gas station. The receipt. You know the one.')">
+            <circle cx="230" cy="210" r="6" fill="#ff2e63"/>
+            <text x="242" y="214">THE GAS STATION</text>
+          </g>
+          <g class="map-pin" onclick="openPkpdModal('Two officers were dispatched here. Their vehicles were found running, doors open.')">
+            <circle cx="70" cy="230" r="6" fill="#ffb703"/>
+            <text x="82" y="234">40 MI MARKER</text>
+          </g>
+        </svg>
+        <p style="font-size:0.55rem;letter-spacing:1.5px;color:#333;text-align:center;margin-top:0.75rem;">TAP A PIN. PKPD DOES NOT RECOMMEND VISITING IN PERSON.</p>
+      </div>
+    </div></div>
+    <div class="doc-section"><div class="doc-section-header"><div class="doc-section-num">SECTION 08</div><div class="doc-section-title">INTERCEPTED — UPCOMING RELEASES</div></div><div class="doc-section-body"><p>The following titles were recovered from a source PKPD is not authorized to name. Authenticity unconfirmed. Release dates unconfirmed. Existence, at this point, is the best we can offer.</p>
+      <div class="roadmap-grid">
+        <div class="roadmap-card"><span class="roadmap-tag">Case #: TBD</span><div class="roadmap-title">PURPLE MAN</div><div class="roadmap-desc">Next on the docket. Details classified until further notice.</div></div>
+        <div class="roadmap-card"><span class="roadmap-tag">Case #: TBD</span><div class="roadmap-title">CHRISTMAS ALBUM</div><div class="roadmap-desc">Yes, really. PKPD has no further comment.</div></div>
+        <div class="roadmap-card"><span class="roadmap-tag">Case #: TBD</span><div class="roadmap-title">LARP TRAIN</div><div class="roadmap-desc">We don't know what this means either.</div></div>
+        <div class="roadmap-card"><span class="roadmap-tag">Case #: 03-2027</span><div class="roadmap-title">UNTITLED (MARCH 2027)</div><div class="roadmap-desc">A three-act concept record. Structurally, we're told, it falls apart on purpose.</div></div>
+      </div>
+    </div></div>
+    <div class="doc-section"><div class="doc-section-header"><div class="doc-section-num">SECTION 09</div><div class="doc-section-title">PKPD WANTED BOARD — KNOWN ASSOCIATES</div></div><div class="doc-section-body"><p>Cross-reference with Section 03. Status current as of last filing.</p>
+      <div class="wanted-grid">
+        <div class="wanted-card"><span class="wanted-badge">ARMED &amp; MELODIC</span><div class="wanted-name">MK ULTRA</div><div class="wanted-desc">Underground rapper. Vegas incident. Whereabouts unconfirmed.</div></div>
+        <div class="wanted-card"><span class="wanted-badge">UNDER INVESTIGATION</span><div class="wanted-name">MC TWIXX</div><div class="wanted-desc">Ongoing dispute involving a candy bar. Still unresolved.</div></div>
+        <div class="wanted-card"><span class="wanted-badge">CLASSIFICATION: UNKNOWN</span><div class="wanted-name">BRYDN</div><div class="wanted-desc">No record exists. Do not attempt contact.</div></div>
+        <div class="wanted-card"><span class="wanted-badge">BACKGROUND: INCONCLUSIVE</span><div class="wanted-name">MEXICAN MICHAEL JACKSON</div><div class="wanted-desc">Two people, one alias. PKPD has stopped asking why.</div></div>
+      </div>
+    </div></div>
+    <div class="doc-section"><div class="doc-section-header"><div class="doc-section-num">SECTION 10</div><div class="doc-section-title">SEIZED LYRIC FRAGMENTS</div></div><div class="doc-section-body"><p>Partial recovery only. Full transcripts pending further review.</p>
+      <div class="lyrics-accordion" id="lyrics-accordion">
+        <div class="lyrics-row"><button class="lyrics-row-toggle" onclick="toggleLyrics(this)"><span>nobody</span><span class="lyrics-row-arrow">▸</span></button><div class="lyrics-row-body"><p>Full lyrics coming soon.</p></div></div>
+        <div class="lyrics-row"><button class="lyrics-row-toggle" onclick="toggleLyrics(this)"><span>YDOBON</span><span class="lyrics-row-arrow">▸</span></button><div class="lyrics-row-body"><p>Full lyrics coming soon.</p></div></div>
+        <div class="lyrics-row"><button class="lyrics-row-toggle" onclick="toggleLyrics(this)"><span>ghost.</span><span class="lyrics-row-arrow">▸</span></button><div class="lyrics-row-body"><p>Full lyrics coming soon.</p></div></div>
+        <div class="lyrics-row"><button class="lyrics-row-toggle" onclick="toggleLyrics(this)"><span>ROSARY</span><span class="lyrics-row-arrow">▸</span></button><div class="lyrics-row-body"><p>Full lyrics coming soon.</p></div></div>
+        <div class="lyrics-row"><button class="lyrics-row-toggle" onclick="toggleLyrics(this)"><span>MANUFACTURED CONSENT</span><span class="lyrics-row-arrow">▸</span></button><div class="lyrics-row-body"><p>Full lyrics coming soon.</p></div></div>
+      </div>
+    </div></div>
+    <div class="doc-section"><div class="doc-section-header"><div class="doc-section-num">SECTION 11</div><div class="doc-section-title">OPERATIONAL LOGISTICS — BETA &amp; MEDIA</div></div><div class="doc-section-body"><p>PKPD's involvement in promotional matters is, as ever, unwelcome but ongoing.</p>
+      <div class="beta-teaser" style="margin:0 0 1.5rem;padding:0;">
+        <div class="beta-teaser-inner">
+          <div>
+            <span class="beta-teaser-label">// IN DEVELOPMENT — PILLKILL TYCOON BETA 2.0 //</span>
+            <div class="beta-teaser-text">Elevator system, mobile support, a whole new Building 3, and an achievement system are all in the works. No ETA — check back.</div>
+          </div>
+          <span class="btn btn-ghost" style="opacity:0.6;pointer-events:none;">COMING SOON</span>
+        </div>
+      </div>
+      <p style="font-size:0.7rem;letter-spacing:1.5px;color:var(--grey);line-height:2;margin-bottom:1rem;">FOR MEDIA/PRESS: Buffalo Pill is an independent rap artist and producer self-releasing music, visuals, and an expanding fictional universe (PKPD / Pillkill, NV) around each project. All writing, production, and direction handled in-house.</p>
+      <div class="press-facts">
+        <div class="press-fact"><span class="press-fact-label">Latest Release</span><span class="press-fact-value">nobody//EVERYBODY</span></div>
+        <div class="press-fact"><span class="press-fact-label">Previous Release</span><span class="press-fact-value">MANUFACTURED CONSENT</span></div>
+        <div class="press-fact"><span class="press-fact-label">Label</span><span class="press-fact-value">Independent / Self-Released</span></div>
+        <div class="press-fact"><span class="press-fact-label">Streaming</span><span class="press-fact-value">Spotify · Apple Music · SoundCloud</span></div>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="https://open.spotify.com/artist/0KT9MzDOenp2Fa2TbUAJSL" target="_blank" rel="noopener">SPOTIFY PRESS LINK</a>
+        <a class="btn btn-ghost" href="#mailinglist" onclick="closeFile()">PRESS/BOOKING INQUIRIES</a>
+      </div>
+    </div></div>
     <div class="doc-footer"><span>PKPD — PILLKILL POLICE DEPARTMENT</span><span>FILE 137 — EYES ONLY</span><span>DO NOT PRINT · DO NOT SHARE · DO NOT DREAM ABOUT THIS</span></div>
   </div>
 </div>
@@ -498,6 +663,7 @@
     <a href="#videos">VIDEOS</a>
     <a href="#games">GAMES</a>
     <a href="#merch">MERCH</a>
+    <a href="https://discord.gg/xdQH5X2x4j" target="_blank" rel="noopener">DISCORD</a>
     <a href="#socials">SOCIALS</a>
     <a href="#" class="nav-file" onclick="openFile();return false;">FILE 137</a>
   </div>
@@ -505,6 +671,18 @@
 
 <header>
   <div class="hero-bg"></div>
+  <div class="hero-spotlight" id="hero-spotlight"></div>
+  <div class="hero-blobs-wrap" id="hero-blobs-wrap">
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+    <div class="hero-blob hero-blob-3"></div>
+  </div>
+  <span class="hero-particle" style="left:10%; animation-duration:12s; animation-delay:0s;">💊</span>
+  <span class="hero-particle" style="left:25%; animation-duration:16s; animation-delay:2s;">✦</span>
+  <span class="hero-particle" style="left:45%; animation-duration:13s; animation-delay:5s;">💊</span>
+  <span class="hero-particle" style="left:65%; animation-duration:18s; animation-delay:1s;">✦</span>
+  <span class="hero-particle" style="left:80%; animation-duration:14s; animation-delay:7s;">💊</span>
+  <span class="hero-particle" style="left:92%; animation-duration:17s; animation-delay:3.5s;">✦</span>
   <div class="hero-img-wrap"><img src="cover.jpg" alt="Buffalo Pill" onerror="this.style.display='none'"></div>
   <p class="hero-tag">// STRAIGHT OUTTA WOODSBORO //</p>
   <h1>BUFFALO<br>PILL</h1>
@@ -518,52 +696,60 @@
 
 <div class="ticker-wrap">
   <div class="ticker-inner">
-    <span>BUFFALO PILL</span><span>·</span><span>NOBODY//EVERYBODY</span><span>·</span><span>INCOMING</span><span>·</span><span>MANUFACTURED CONSENT</span><span>·</span><span>GHOST</span><span>·</span><span>VOIDED</span><span>·</span><span>GLITCH</span><span>·</span><span>STRAIGHT OUTTA PILLKILL NEVADA</span><span>·</span>
-    <span>BUFFALO PILL</span><span>·</span><span>NOBODY//EVERYBODY</span><span>·</span><span>INCOMING</span><span>·</span><span>MANUFACTURED CONSENT</span><span>·</span><span>GHOST</span><span>·</span><span>VOIDED</span><span>·</span><span>GLITCH</span><span>·</span><span>STRAIGHT OUTTA PILLKILL NEVADA</span><span>·</span>
+    <span>BUFFALO PILL</span><span>·</span><span>NOBODY//EVERYBODY</span><span>·</span><span>OUT NOW</span><span>·</span><span>MANUFACTURED CONSENT</span><span>·</span><span>GHOST</span><span>·</span><span>VOIDED</span><span>·</span><span>GLITCH</span><span>·</span><span>STRAIGHT OUTTA PILLKILL NEVADA</span><span>·</span>
+    <span>BUFFALO PILL</span><span>·</span><span>NOBODY//EVERYBODY</span><span>·</span><span>OUT NOW</span><span>·</span><span>MANUFACTURED CONSENT</span><span>·</span><span>GHOST</span><span>·</span><span>VOIDED</span><span>·</span><span>GLITCH</span><span>·</span><span>STRAIGHT OUTTA PILLKILL NEVADA</span><span>·</span>
   </div>
 </div>
 
-<div class="album-banner">
-  <span class="album-banner-label">// INCOMING //</span>
-  <div class="album-banner-title glitch-text" data-text="nobody//EVERYBODY">nobody//EVERYBODY</div>
-  <div class="album-banner-sub">AUGUST 11, 2026</div>
-  <div class="album-countdown" id="album-countdown">
-    <div class="acd-block"><span class="acd-num" id="acd-days">00</span><span class="acd-label">DAYS</span></div>
-    <div class="acd-sep">:</div>
-    <div class="acd-block"><span class="acd-num" id="acd-hours">00</span><span class="acd-label">HRS</span></div>
-    <div class="acd-sep">:</div>
-    <div class="acd-block"><span class="acd-num" id="acd-minutes">00</span><span class="acd-label">MINS</span></div>
-    <div class="acd-sep">:</div>
-    <div class="acd-block"><span class="acd-num" id="acd-seconds">00</span><span class="acd-label">SECS</span></div>
-  </div>
+<div class="album-banner reveal">
+  <span class="album-banner-label">// OUT NOW //</span>
+  <div class="album-banner-title">nobody//EVERYBODY</div>
+  <div class="album-banner-sub">THE LATEST BUFFALO PILL ALBUM — STREAMING EVERYWHERE</div>
   <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;margin-top:1.25rem;">
-    <a href="#music" class="btn btn-primary" style="padding:0.5rem 1.5rem;font-size:0.65rem;">SEE TRACKLIST</a>
-    <a href="https://open.spotify.com/artist/0KT9MzDOenp2Fa2TbUAJSL" target="_blank" rel="noopener" class="btn btn-ghost" style="padding:0.5rem 1.5rem;font-size:0.65rem;">FOLLOW ON SPOTIFY</a>
+    <a href="https://open.spotify.com/artist/0KT9MzDOenp2Fa2TbUAJSL" target="_blank" rel="noopener" class="btn btn-primary" style="padding:0.5rem 1.5rem;font-size:0.65rem;">STREAM ON SPOTIFY</a>
+    <a href="https://music.apple.com/us/artist/buffalo-pill/1853023050" target="_blank" rel="noopener" class="btn btn-ghost" style="padding:0.5rem 1.5rem;font-size:0.65rem;">APPLE MUSIC</a>
+    <a href="#music" class="btn btn-ghost" style="padding:0.5rem 1.5rem;font-size:0.65rem;">SEE TRACKLIST</a>
   </div>
+</div>
+
+<div class="discord-banner reveal">
+  <div class="discord-banner-left">
+    <div class="discord-banner-icon">🎮</div>
+    <div>
+      <span class="discord-banner-label">// PKPD DISPATCH CHANNEL //</span>
+      <div class="discord-banner-title">JOIN THE BUFFALO PILL DISCORD</div>
+      <p class="discord-banner-sub">Lore drops, early music, and the case file room. Come hang with the rest of Pillkill.</p>
+      <div class="discord-live" id="discord-live" style="display:none;"><span class="discord-live-dot"></span><span id="discord-live-text"></span></div>
+    </div>
+  </div>
+  <a href="https://discord.gg/xdQH5X2x4j" target="_blank" rel="noopener" class="btn btn-primary discord-btn">JOIN DISCORD</a>
 </div>
 
 <hr class="rule">
 
-<section id="music">
-  <span class="section-label">// INCOMING</span>
+<section id="music" class="reveal">
+  <span class="section-label">// LATEST ALBUM</span>
   <h2>nobody//EVERYBODY</h2>
   <div class="music-block">
-    <div class="legal-notice"><span>// NOTE //</span> nobody//EVERYBODY is the next Buffalo Pill album. Release date TBA. Tracklist below.</div>
+    <div class="legal-notice"><span>// NOTE //</span> nobody//EVERYBODY is out now. Full tracklist below.</div>
     <div class="tracklist-reveal">
       <div class="tracklist-item"><span class="tracklist-num">01</span><span class="tracklist-title">nobody</span></div>
-      <div class="tracklist-item"><span class="tracklist-num">02</span><span class="tracklist-title">YDOBON</span><span class="tracklist-feat">feat. MC TWIXX</span></div>
-      <div class="tracklist-item"><span class="tracklist-num">03</span><span class="tracklist-title">Voided</span><span class="tracklist-feat">feat. MK Ultra</span></div>
-      <div class="tracklist-item"><span class="tracklist-num">04</span><span class="tracklist-title">Ghost</span><span class="tracklist-feat">feat. Cid Kudi</span></div>
-      <div class="tracklist-item"><span class="tracklist-num">05</span><span class="tracklist-title">Heaven</span><span class="tracklist-feat">feat. Drizzy Drozz</span></div>
-      <div class="tracklist-item"><span class="tracklist-num">06</span><span class="tracklist-title">Saturated</span><span class="tracklist-feat">feat. Shamama</span></div>
-      <div class="tracklist-item"><span class="tracklist-num">07</span><span class="tracklist-title">GLITCH</span></div>
-      <div class="tracklist-item"><span class="tracklist-num">08</span><span class="tracklist-title">The Aftermath Theory</span><span class="tracklist-feat">feat. MK Ultra, MC TWIXX</span></div>
-      <div class="tracklist-item"><span class="tracklist-num">09</span><span class="tracklist-title">SCREAMER</span><span class="tracklist-feat">feat. MC TWIXX</span></div>
-      <div class="tracklist-item"><span class="tracklist-num">10</span><span class="tracklist-title">METHODIST</span><span class="tracklist-feat">feat. Felony Steve</span></div>
-      <div class="tracklist-item"><span class="tracklist-num">11</span><span class="tracklist-title">EVERYBODY</span></div>
-      <div class="tracklist-item"><span class="tracklist-num">12</span><span class="tracklist-title">Ghost</span><span class="tracklist-feat">(Nightmare Mix)</span></div>
+      <div class="tracklist-item"><span class="tracklist-num">02</span><span class="tracklist-title">YDOBON</span></div>
+      <div class="tracklist-item"><span class="tracklist-num">03</span><span class="tracklist-title">5 guys fuckin the big black guy</span></div>
+      <div class="tracklist-item"><span class="tracklist-num">04</span><span class="tracklist-title">ghost.</span></div>
+      <div class="tracklist-item"><span class="tracklist-num">05</span><span class="tracklist-title">ALWAYS</span></div>
+      <div class="tracklist-item"><span class="tracklist-num">06</span><span class="tracklist-title">ROSARY</span></div>
+      <div class="tracklist-item"><span class="tracklist-num">07</span><span class="tracklist-title">Heaven</span></div>
+      <div class="tracklist-item"><span class="tracklist-num">08</span><span class="tracklist-title">Saturated</span></div>
+      <div class="tracklist-item"><span class="tracklist-num">09</span><span class="tracklist-title">GLITCH</span></div>
+      <div class="tracklist-item"><span class="tracklist-num">10</span><span class="tracklist-title">Vivo</span></div>
+      <div class="tracklist-item"><span class="tracklist-num">11</span><span class="tracklist-title">42j</span></div>
+      <div class="tracklist-item"><span class="tracklist-num">12</span><span class="tracklist-title">EVERYBODY</span></div>
     </div>
-    <div class="btn-row"><a class="btn btn-primary" href="#mailinglist">GET NOTIFIED ON RELEASE</a></div>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="https://open.spotify.com/artist/0KT9MzDOenp2Fa2TbUAJSL" target="_blank" rel="noopener">SPOTIFY</a>
+      <a class="btn btn-ghost" href="https://music.apple.com/us/artist/buffalo-pill/1853023050" target="_blank" rel="noopener">APPLE MUSIC</a>
+    </div>
   </div>
   <hr class="rule" style="margin-bottom:3rem;">
   <span class="section-label">// PREVIOUS ALBUM</span>
@@ -590,7 +776,7 @@
 
 <hr class="rule">
 
-<section id="videos">
+<section id="videos" class="reveal">
   <span class="section-label">// VISUALS</span>
   <h2>VIDEOS</h2>
   <iframe class="main-vid" src="https://www.youtube.com/embed/gQyjohMuEyY" title="RADIO SILENT" allowfullscreen loading="lazy"></iframe>
@@ -608,21 +794,23 @@
 
 <hr class="rule">
 
+<hr class="rule">
+
 <!-- GAMES -->
 <section id="games">
-  <div class="games-intro">
+  <div class="games-intro reveal">
     <span class="section-label">// PLAY</span>
     <h2>GAMES</h2>
   </div>
 
   <div id="games-select" class="games-grid">
-    <div class="game-card">
+    <div class="game-card reveal">
       <div class="game-card-icon">💊</div>
       <div class="game-card-title">PILLKILL CLICKER</div>
       <div class="game-card-desc">Click the pill. Grow the collection. Unlock Grandma Kanye. Prestige your way to FILE 137.</div>
       <button class="btn btn-primary" onclick="playClicker()">PLAY</button>
     </div>
-    <div class="game-card">
+    <div class="game-card reveal">
       <div class="game-card-icon">🏙️</div>
       <div class="game-card-title">PILLKILL TYCOON</div>
       <div class="game-card-desc">Run the operation. Build the storefront. Hire Mike. Beta 1.0 — WASD to move, E to interact.</div>
@@ -704,10 +892,20 @@
                 <div class="prestige-reward-text"><span class="prestige-reward-name">RADIO SILENT RECOVERED</span><span class="prestige-reward-req">PRESTIGE 10 · FILE 137 PASSWORD + FREE SONG UNLOCKED</span></div>
               </div>
             </div>
+            <div class="leaderboard-panel">
+              <span class="prestige-rewards-label">// PKPD LEADERBOARD</span>
+              <div class="leaderboard-row-input">
+                <input class="leaderboard-input" id="lb-username" type="text" placeholder="USERNAME" maxlength="16" autocomplete="off" spellcheck="false">
+                <button class="btn btn-primary" style="padding:0.55rem 1rem;font-size:0.5rem;" onclick="claimUsername()">CLAIM</button>
+              </div>
+              <div class="leaderboard-status" id="lb-status"></div>
+              <button class="btn btn-ghost leaderboard-submit" onclick="submitScore()">SUBMIT MY SCORE</button>
+              <div class="leaderboard-list" id="lb-list"><div class="leaderboard-empty">Loading leaderboard…</div></div>
+            </div>
             <div id="secret-reveal" style="display:none;border:1px solid var(--red);border-top:none;padding:1rem;background:#0d0d0d;text-align:center;">
               <span style="font-size:0.5rem;letter-spacing:3px;color:var(--red);display:block;margin-bottom:0.75rem;">// CLEARANCE GRANTED //</span>
               <div style="font-size:0.55rem;letter-spacing:2px;color:#888;margin-bottom:0.5rem;">FILE 137 ACCESS CODE</div>
-              <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:6px;color:var(--red2);margin-bottom:1rem;text-shadow:0 0 10px rgba(190,190,190,0.5);">FILE137</div>
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:6px;color:var(--red2);margin-bottom:1rem;text-shadow:0 0 10px rgba(255,183,3,0.5);">FILE137</div>
               <a href="glascowman.wav" download="glascowman.wav" class="btn btn-primary" style="font-size:0.6rem;padding:0.6rem 1.2rem;">DOWNLOAD FREE SONG</a>
             </div>
           </div>
@@ -727,7 +925,21 @@
 
 <hr class="rule">
 
-<section id="merch">
+<section id="shows" class="reveal">
+  <span class="section-label">// ON THE ROAD</span>
+  <h2>SHOWS</h2>
+  <div class="shows-empty">
+    <p>No shows booked yet. First one to go up here gets announced on the Discord and the mailing list before anywhere else.</p>
+    <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+      <a href="https://discord.gg/xdQH5X2x4j" target="_blank" rel="noopener" class="btn btn-primary discord-btn">GET NOTIFIED ON DISCORD</a>
+      <a href="#mailinglist" class="btn btn-ghost">JOIN MAILING LIST</a>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<section id="merch" class="reveal">
   <span class="section-label">// DROP #1</span>
   <h2>MERCH</h2>
   <div class="merch-inner">
@@ -742,17 +954,17 @@
       <div class="cd-sep">:</div>
       <div class="cd-block"><span class="cd-num" id="seconds">00</span><span class="cd-label">SECS</span></div>
     </div>
-    <a href="#" class="btn btn-primary" onclick="alert('Merch store launching soon.');return false">NOTIFY ME</a>
+    <a href="#mailinglist" class="btn btn-primary">NOTIFY ME</a>
   </div>
 </section>
 
 <hr class="rule">
 
-<section id="mailinglist">
+<section id="mailinglist" class="reveal">
   <span class="section-label">// STAY IN THE LOOP</span>
   <h2>MAILING LIST</h2>
   <div class="mail-block">
-    <p class="mail-desc">nobody//EVERYBODY IS COMING. GET NOTIFIED THE MOMENT IT DROPS.<br>NO SPAM. JUST THE SIGNAL.</p>
+    <p class="mail-desc">NEW MUSIC, SHOW ANNOUNCEMENTS, AND LORE DROPS — FIRST.<br>SUBSCRIBERS GET UNRELEASED SNIPPETS BEFORE ANYONE ELSE. NO SPAM. JUST THE SIGNAL.</p>
     <div class="mail-form">
       <input class="mail-input" type="email" placeholder="YOUR EMAIL" id="mail-input">
       <a class="btn btn-primary" href="https://buttondown.com/buffalopill" target="_blank" rel="noopener" onclick="handleMailSignup(event)">SUBSCRIBE</a>
@@ -762,10 +974,11 @@
 
 <hr class="rule">
 
-<section id="socials">
+<section id="socials" class="reveal">
   <span class="section-label">// FIND ME</span>
   <h2>SOCIALS</h2>
   <div class="social-grid">
+    <a class="social-item" href="https://discord.gg/xdQH5X2x4j" target="_blank" rel="noopener"><span class="social-platform">DISCORD</span><span class="social-handle">Join the server</span></a>
     <a class="social-item" href="https://www.tiktok.com/@buffalo.pill" target="_blank" rel="noopener"><span class="social-platform">TIKTOK</span><span class="social-handle">@buffalo.pill</span></a>
     <a class="social-item" href="https://www.instagram.com/buff.alopill/" target="_blank" rel="noopener"><span class="social-platform">INSTAGRAM</span><span class="social-handle">@buff.alopill</span></a>
     <a class="social-item" href="https://x.com/BuffaloPill" target="_blank" rel="noopener"><span class="social-platform">X / TWITTER</span><span class="social-handle">@BuffaloPill</span></a>
@@ -777,10 +990,10 @@
 
 <div class="hidden-tracklist" aria-hidden="true">
 nobody//EVERYBODY
-01. nobody 02. YDOBON (feat. MC TWIXX) 03. Voided (feat. MK Ultra)
-04. Ghost (feat. Cid Kudi) 05. Heaven (feat. Drizzy Drozz) 06. Saturated (feat. Shamama)
-07. GLITCH 08. The Aftermath Theory (feat. MK Ultra, MC TWIXX) 09. SCREAMER (feat. MC TWIXX)
-10. METHODIST (feat. Felony Steve) 11. EVERYBODY 12. Ghost (Nightmare Mix)
+01. nobody 02. YDOBON 03. 5 guys fuckin the big black guy
+04. ghost. 05. ALWAYS 06. ROSARY
+07. Heaven 08. Saturated 09. GLITCH
+10. Vivo 11. 42j 12. EVERYBODY
 
 MANUFACTURED CONSENT
 01. WHATSSUPP 02. FEAR 03. REAGANOMICS II 04. TAKE THE CALL 05. VIOLENCE
@@ -798,7 +1011,7 @@ MANUFACTURED CONSENT
 
 <!-- GRANDMA KANYE — floats on page when purchased -->
 <img id="grandma-kanye" src="grandmakanye.jpg" alt="">
-<audio id="s" src="https://buffalopill.pages.dev/secret.mp3" preload="auto"></audio>
+<audio id="s" src="https://buffalopill.com/secret.mp3" preload="auto"></audio>
 
 <script>
   // LOADER
@@ -829,18 +1042,6 @@ MANUFACTURED CONSENT
   }
   setInterval(updateCountdown, 1000); updateCountdown();
 
-  // ALBUM COUNTDOWN — nobody//EVERYBODY, August 11 2026
-  const albumDate = new Date('2026-08-11T00:00:00').getTime();
-  function updateAlbumCountdown() {
-    const now = Date.now(), d = albumDate - now;
-    if (d < 0) { document.getElementById('album-countdown').innerHTML = '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.5rem;letter-spacing:4px;color:var(--red2);">OUT NOW</div>'; return; }
-    document.getElementById('acd-days').textContent    = String(Math.floor(d/86400000)).padStart(2,'0');
-    document.getElementById('acd-hours').textContent   = String(Math.floor((d%86400000)/3600000)).padStart(2,'0');
-    document.getElementById('acd-minutes').textContent = String(Math.floor((d%3600000)/60000)).padStart(2,'0');
-    document.getElementById('acd-seconds').textContent = String(Math.floor((d%60000)/1000)).padStart(2,'0');
-  }
-  setInterval(updateAlbumCountdown, 1000); updateAlbumCountdown();
-
   // FILE 137
   function openFile() {
     document.getElementById('file-overlay').classList.add('open');
@@ -851,7 +1052,17 @@ MANUFACTURED CONSENT
     document.getElementById('gate-input').classList.remove('error');
     document.body.style.overflow = 'hidden';
   }
-  function closeFile() { document.getElementById('file-overlay').classList.remove('open'); document.body.style.overflow = ''; }
+  function closeFile() { document.getElementById('file-overlay').classList.remove('open'); document.body.style.overflow = ''; closePkpdModal(); }
+
+  // PKPD FIELD NOTE MODAL (replaces native alert() for the lore map pins)
+  function openPkpdModal(text) {
+    document.getElementById('pkpd-modal-text').textContent = text;
+    document.getElementById('pkpd-modal').classList.add('open');
+  }
+  function closePkpdModal() {
+    const m = document.getElementById('pkpd-modal');
+    if (m) m.classList.remove('open');
+  }
   function checkPassword() {
     const val = document.getElementById('gate-input').value.trim().toUpperCase();
     if (val === 'FILE137') {
@@ -870,9 +1081,44 @@ MANUFACTURED CONSENT
     const email = document.getElementById('mail-input').value;
     if (!email || !email.includes('@')) { e.preventDefault(); document.getElementById('mail-input').style.borderColor = 'var(--red2)'; setTimeout(() => document.getElementById('mail-input').style.borderColor = '', 1000); }
   }
+
+  // LYRICS ACCORDION
+  function toggleLyrics(btn) {
+    const row = btn.closest('.lyrics-row');
+    const wasOpen = row.classList.contains('open');
+    document.querySelectorAll('#lyrics-accordion .lyrics-row.open').forEach(r => r.classList.remove('open'));
+    if (!wasOpen) row.classList.add('open');
+  }
+
+  // DISCORD LIVE MEMBER COUNT
+  (function() {
+    fetch('https://discord.com/api/v9/invites/xdQH5X2x4j?with_counts=true')
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => {
+        const el = document.getElementById('discord-live');
+        const txt = document.getElementById('discord-live-text');
+        if (!el || !txt) return;
+        const online = data.approximate_presence_count;
+        const total = data.approximate_member_count;
+        if (typeof total === 'number') {
+          txt.textContent = (typeof online === 'number' ? online + ' online · ' : '') + total + ' members';
+          el.style.display = 'flex';
+        }
+      })
+      .catch(() => {});
+  })();
   let keys = [];
   const konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-  document.addEventListener('keydown', e => { keys.push(e.key); keys = keys.slice(-10); if (keys.join(',') === konami.join(',')) document.getElementById('s').play(); });
+  document.addEventListener('keydown', e => {
+    keys.push(e.key); keys = keys.slice(-10);
+    if (keys.join(',') === konami.join(',')) {
+      document.getElementById('s').play();
+      showToast('// KONAMI CODE ACCEPTED //');
+      spawnConfetti(window.innerWidth * 0.5, window.innerHeight * 0.3);
+      spawnConfetti(window.innerWidth * 0.25, window.innerHeight * 0.5);
+      spawnConfetti(window.innerWidth * 0.75, window.innerHeight * 0.5);
+    }
+  });
   let typedWord = '';
   document.addEventListener('keypress', e => { typedWord += e.key.toLowerCase(); typedWord = typedWord.slice(-8); if (typedWord === 'pillkill') openFile(); });
 
@@ -1009,6 +1255,14 @@ MANUFACTURED CONSENT
     if (!el._interval) el._interval = setInterval(() => place(true), 9000);
   }
 
+  function hideGrandmaKanye() {
+    const el = document.getElementById('grandma-kanye');
+    if (!el) return;
+    if (el._interval) { clearInterval(el._interval); el._interval = null; }
+    el.style.opacity = '0';
+    setTimeout(() => { el.style.display = 'none'; }, 400);
+  }
+
   function initUpgrades() {
     const c = document.getElementById('upgrades-container');
     c.innerHTML = '';
@@ -1073,6 +1327,17 @@ MANUFACTURED CONSENT
     refreshUpgrades();
     checkMilestones();
     refreshPrestigeRewards();
+    if (totalClicks > 0 || pills > 0) {
+      document.title = '💊 ' + fmt(pills) + ' — Buffalo Pill';
+    }
+  }
+
+  function popStat(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('stat-pop');
+    void el.offsetWidth;
+    el.classList.add('stat-pop');
   }
 
   function clickPill(e) {
@@ -1085,7 +1350,36 @@ MANUFACTURED CONSENT
     f.style.top  = (e.clientY - 20) + 'px';
     document.body.appendChild(f);
     setTimeout(() => f.remove(), 1000);
+    spawnConfetti(e.clientX, e.clientY);
     tick();
+    popStat('stat-pills');
+    popStat('current-pills-display');
+  }
+
+  function spawnConfetti(x, y) {
+    const colors = ['#ff2e63', '#ffb703', '#00c2ff'];
+    for (let i = 0; i < 8; i++) {
+      const p = document.createElement('div');
+      p.style.position = 'fixed';
+      p.style.left = x + 'px';
+      p.style.top = y + 'px';
+      p.style.width = '6px';
+      p.style.height = '6px';
+      p.style.borderRadius = '50%';
+      p.style.background = colors[i % colors.length];
+      p.style.pointerEvents = 'none';
+      p.style.zIndex = '9999';
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 40 + Math.random() * 50;
+      const dx = Math.cos(angle) * dist;
+      const dy = Math.sin(angle) * dist;
+      document.body.appendChild(p);
+      const anim = p.animate([
+        { transform: 'translate(0,0) scale(1)', opacity: 1 },
+        { transform: `translate(${dx}px, ${dy}px) scale(0.4)`, opacity: 0 }
+      ], { duration: 550 + Math.random() * 300, easing: 'ease-out' });
+      anim.onfinish = () => p.remove();
+    }
   }
 
   const MS_THRESH = [100,1000,10000,100000,1000000];
@@ -1097,9 +1391,11 @@ MANUFACTURED CONSENT
     if (pills < 1000000) return;
     if (!confirm('PILLKILL PROTOCOL\n\nReset pills + upgrades?\nPrestige bonus kept. BRYDN cannot be undone.')) return;
     const prev = prestigeCount;
+    const preTotalEver = totalEver;
     prestigeCount++;
     pills = 0; totalEver = 0;
     UPGRADES.forEach(u => { u.count = 0; });
+    hideGrandmaKanye();
     MS_THRESH.forEach((_,i) => { const el=document.getElementById('ms-'+i); if(el) el.classList.remove('achieved'); });
     // Show reward toast if new threshold hit
     PRESTIGE_REWARDS.forEach(r => {
@@ -1110,9 +1406,127 @@ MANUFACTURED CONSENT
     });
     saveGame();
     tick();
+    autoSubmitScore(prestigeCount, preTotalEver);
   }
 
   let _saveTick = 0;
+
+  // ============================
+  // CLICKER LEADERBOARD
+  // ============================
+  // Server-side (Cloudflare Worker + KV) authoritatively enforces username
+  // format, the profanity filter, and case-sensitive uniqueness — this
+  // client-side copy is just for instant feedback and is NOT the security
+  // boundary. See leaderboard-worker.js for the real enforcement.
+  //
+  // The site is hosted on GitHub Pages (static-only, can't run server code),
+  // so the leaderboard API has to live on a separate service — a Cloudflare
+  // Worker, deployed on its own free *.workers.dev URL. Paste that URL here
+  // once you've deployed leaderboard-worker.js (see its header comment for
+  // the 5-minute setup). Leave it blank and the leaderboard will clearly say
+  // "not set up yet" instead of silently failing.
+  const LEADERBOARD_API = '';
+  const LB_BANNED_SUBSTRINGS = ['nigger','nigga','faggot','fag','retard','chink','spic','kike','tranny','wetback','coon','gook','beaner','cunt','rape','nazi'];
+  function lbNormalize(s) {
+    return s.toLowerCase()
+      .replace(/[0]/g, 'o').replace(/[1!|]/g, 'i').replace(/3/g, 'e')
+      .replace(/4/g, 'a').replace(/5/g, 's').replace(/7/g, 't').replace(/\$/g, 's')
+      .replace(/[^a-z]/g, '');
+  }
+  function lbContainsBannedWord(name) {
+    const norm = lbNormalize(name);
+    return LB_BANNED_SUBSTRINGS.some(w => norm.includes(w));
+  }
+  function lbValidFormat(name) {
+    return /^[A-Za-z0-9_]{2,16}$/.test(name);
+  }
+  function lbEscapeHtml(s) {
+    return s.replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+  }
+  function lbSetStatus(msg, type) {
+    const el = document.getElementById('lb-status');
+    if (!el) return;
+    el.textContent = msg;
+    el.className = 'leaderboard-status' + (type ? ' ' + type : '');
+  }
+
+  async function claimUsername() {
+    const input = document.getElementById('lb-username');
+    const name = input.value.trim();
+    if (!lbValidFormat(name)) { lbSetStatus('2–16 letters, numbers, or _ only.', 'error'); return; }
+    if (lbContainsBannedWord(name)) { lbSetStatus('That username isn\'t allowed.', 'error'); return; }
+    if (!LEADERBOARD_API) { lbSetStatus('Leaderboard isn\'t set up yet — see the note in the script.', 'error'); return; }
+    lbSetStatus('Checking availability…', '');
+    try {
+      const res = await fetch(LEADERBOARD_API + '/api/leaderboard', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'claim', username: name }) });
+      if (res.status === 409) { lbSetStatus('That exact username is taken — try different capitalization or another name.', 'error'); return; }
+      if (res.status === 422) { lbSetStatus('That username isn\'t allowed.', 'error'); return; }
+      if (!res.ok) { lbSetStatus('Leaderboard server not reachable.', 'error'); return; }
+      localStorage.setItem('bp_lb_username', name);
+      lbSetStatus('Username claimed! You can submit scores now.', 'ok');
+      loadLeaderboard();
+    } catch (e) { lbSetStatus('Leaderboard server not reachable.', 'error'); }
+  }
+
+  async function submitScore() {
+    const name = localStorage.getItem('bp_lb_username') || document.getElementById('lb-username').value.trim();
+    if (!name) { lbSetStatus('Claim a username first.', 'error'); return; }
+    if (!LEADERBOARD_API) { lbSetStatus('Leaderboard isn\'t set up yet — see the note in the script.', 'error'); return; }
+    try {
+      const res = await fetch(LEADERBOARD_API + '/api/leaderboard', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'submit', username: name, prestige: prestigeCount, totalEver: Math.floor(totalEver) }) });
+      if (res.status === 403) { lbSetStatus('That username isn\'t claimed on this device.', 'error'); return; }
+      if (!res.ok) { lbSetStatus('Could not submit score.', 'error'); return; }
+      lbSetStatus('Score submitted!', 'ok');
+      loadLeaderboard();
+    } catch (e) { lbSetStatus('Leaderboard server not reachable.', 'error'); }
+  }
+
+  async function autoSubmitScore(prestige, total) {
+    const name = localStorage.getItem('bp_lb_username');
+    if (!name || !LEADERBOARD_API) return;
+    try {
+      await fetch(LEADERBOARD_API + '/api/leaderboard', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'submit', username: name, prestige, totalEver: Math.floor(total) }) });
+      loadLeaderboard();
+    } catch (e) {}
+  }
+
+  const LB_MEDALS = ['🥇', '🥈', '🥉'];
+
+  async function loadLeaderboard() {
+    const list = document.getElementById('lb-list');
+    if (!list) return;
+    if (!LEADERBOARD_API) {
+      list.innerHTML = '<div class="leaderboard-empty">Leaderboard isn\'t set up yet. See the LEADERBOARD_API note near the top of the script.</div>';
+      return;
+    }
+    try {
+      const res = await fetch(LEADERBOARD_API + '/api/leaderboard');
+      if (!res.ok) throw new Error('bad response');
+      const data = await res.json();
+      const mine = localStorage.getItem('bp_lb_username');
+      if (!Array.isArray(data) || data.length === 0) { list.innerHTML = '<div class="leaderboard-empty">No scores yet. Be the first.</div>'; return; }
+      list.innerHTML = data.slice(0, 20).map((e, i) =>
+        '<div class="leaderboard-row' + (e.username === mine ? ' me' : '') + '"><span class="leaderboard-rank">' + (LB_MEDALS[i] || (i + 1)) + '</span><span class="leaderboard-name">' + lbEscapeHtml(e.username) + '</span><span class="leaderboard-score">P' + e.prestige + ' · ' + fmt(e.totalEver) + '</span></div>'
+      ).join('');
+      if (mine) {
+        const myIndex = data.findIndex(e => e.username === mine);
+        if (myIndex >= 20) {
+          list.innerHTML += '<div class="leaderboard-row me" style="border-top:1px dashed #333;margin-top:4px;padding-top:8px;"><span class="leaderboard-rank">#' + (myIndex + 1) + '</span><span class="leaderboard-name">' + lbEscapeHtml(mine) + '</span><span class="leaderboard-score">P' + data[myIndex].prestige + ' · ' + fmt(data[myIndex].totalEver) + '</span></div>';
+        } else if (myIndex === -1) {
+          list.innerHTML += '<div class="leaderboard-empty">You: not ranked yet — submit a score!</div>';
+        }
+      }
+    } catch (e) {
+      list.innerHTML = '<div class="leaderboard-empty">Leaderboard server not connected yet — see setup notes.</div>';
+    }
+  }
+
+  (function initLeaderboard() {
+    const saved = localStorage.getItem('bp_lb_username');
+    const input = document.getElementById('lb-username');
+    if (saved && input) { input.value = saved; lbSetStatus('Playing as ' + saved + '.', 'ok'); }
+    loadLeaderboard();
+  })();
   setInterval(() => {
     const gain = pps();
     if (gain > 0) { pills += gain; totalEver += gain; tick(); }
@@ -1143,52 +1557,82 @@ MANUFACTURED CONSENT
   if (UPGRADES.find(u=>u.id==='grandmakanye').count > 0) spawnGrandmaKanye();
   tick();
 
-  // ============================
-  // DEAD SIGNAL DISTORTION
-  // ============================
-  function triggerGlitch() {
-    document.body.classList.add('desync');
-    document.getElementById('signal-flash').classList.add('active');
-    setTimeout(() => {
-      document.body.classList.remove('desync');
-      document.getElementById('signal-flash').classList.remove('active');
-    }, 250);
-  }
-  // Random glitch burst every 8-20 seconds
-  function scheduleGlitch() {
-    setTimeout(() => { triggerGlitch(); scheduleGlitch(); }, 8000 + Math.random() * 12000);
-  }
-  scheduleGlitch();
+  // SCROLL PROGRESS BAR + HERO PARALLAX
+  (function() {
+    const bar = document.getElementById('scroll-progress');
+    const blobsWrap = document.getElementById('hero-blobs-wrap');
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+      if (bar) bar.style.width = (isFinite(scrolled) ? scrolled : 0) + '%';
+      const y = window.scrollY;
+      if (blobsWrap && y < window.innerHeight) {
+        blobsWrap.style.transform = 'translateY(' + (y * 0.25) + 'px)';
+      }
+    }, { passive: true });
+  })();
 
-  // Text corruption on .glitch-text elements — briefly swap a couple chars
-  const CORRUPT_CHARS = ['#','%','█','▓','░','×','¤','§'];
-  function corruptOnce(el) {
-    const original = el.dataset.text || el.textContent;
-    if (!el.dataset.text) el.dataset.text = original;
-    const chars = original.split('');
-    const swaps = 1 + Math.floor(Math.random() * 2);
-    for (let i = 0; i < swaps; i++) {
-      const idx = Math.floor(Math.random() * chars.length);
-      if (chars[idx] !== ' ' && chars[idx] !== '/') chars[idx] = CORRUPT_CHARS[Math.floor(Math.random()*CORRUPT_CHARS.length)];
-    }
-    el.textContent = chars.join('');
-    setTimeout(() => { el.textContent = el.dataset.text; }, 150);
-  }
-  function scheduleCorruption() {
-    setTimeout(() => {
-      document.querySelectorAll('.glitch-text').forEach(el => { if (Math.random() < 0.6) corruptOnce(el); });
-      scheduleCorruption();
-    }, 3000 + Math.random() * 5000);
-  }
-  scheduleCorruption();
+  // MAGNETIC BUTTON GLOW
+  (function() {
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const r = btn.getBoundingClientRect();
+        btn.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+        btn.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+      });
+    });
+  })();
+
+  // SCROLL REVEAL
+  (function() {
+    const items = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) { items.forEach(el => el.classList.add('in-view')); return; }
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('in-view'); obs.unobserve(entry.target); }
+      });
+    }, { threshold: 0.12 });
+    items.forEach(el => obs.observe(el));
+  })();
+
+  // HERO CURSOR SPOTLIGHT
+  (function() {
+    const spot = document.getElementById('hero-spotlight');
+    const header = document.querySelector('header');
+    if (!spot || !header) return;
+    header.addEventListener('mousemove', (e) => {
+      const rect = header.getBoundingClientRect();
+      spot.style.left = (e.clientX - rect.left) + 'px';
+      spot.style.top = (e.clientY - rect.top) + 'px';
+      spot.style.opacity = '1';
+    });
+    header.addEventListener('mouseleave', () => { spot.style.opacity = '0'; });
+  })();
+
+  // 3D CARD TILT
+  (function() {
+    const tiltEls = document.querySelectorAll('.game-card, .social-item');
+    tiltEls.forEach(card => {
+      card.style.transformStyle = 'preserve-3d';
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transform = `translateY(-6px) rotateX(${(-py * 8).toFixed(2)}deg) rotateY(${(px * 8).toFixed(2)}deg)`;
+      });
+      card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+    });
+  })();
 </script>
 
 <!--
 ================================================================================
 MESSAGE TO FUTURE CLAUDE — READ THIS BEFORE TOUCHING ANYTHING
 ================================================================================
-This is Dan's Buffalo Pill artist website (buffalopill.buffalopillkill.workers.dev),
-deployed via Cloudflare Workers (Pages-style static assets). Dan is an
+This is Dan's Buffalo Pill artist website (now at buffalopill.com — he owns the
+domain outright as of this edit; previously/still also reachable at
+buffalopill.buffalopillkill.workers.dev if the custom domain isn't fully
+pointed yet), deployed via Cloudflare Workers (Pages-style static assets). Dan is an
 independent artist, does his own dev/distribution/creative direction, prefers
 blunt direct feedback, and knows what he DOESN'T want more readily than what he
 does — don't give him vague brainstorm lists, just make concrete changes.
@@ -1203,18 +1647,15 @@ DEPLOYMENT / INFRA GOTCHAS:
   Relative paths only (e.g. src="cover.jpg") — no site-relative absolute URLs.
 - For file downloads (not inline playback), use <a href="file" download="file">,
   NOT target="_blank" — target="_blank" just opens/plays it instead of saving.
-- GAMES TAB (added this edit) needs FOUR more root-level files, same rule:
-  tycoon.html (the standalone Pillkill Tycoon game — a fully self-contained
-  single-file HTML/CSS/JS game, all sprites embedded as base64, built and
-  maintained in a separate conversation thread) plus its three audio tracks:
+- GAMES TAB needs FOUR more root-level files, same rule: tycoon.html (the
+  standalone Pillkill Tycoon game — a fully self-contained single-file
+  HTML/CSS/JS game, all sprites embedded as base64, built and maintained in a
+  separate conversation thread) plus its three audio tracks:
   woodsborotycoon.flac, BludsVCrips.flac, The_SPAWN_Remix.flac. These MUST sit
-  in the repo root next to index.html and tycoon.html itself — tycoon.html
-  references them by bare relative filename (e.g. src="woodsborotycoon.flac"),
-  so if they're nested in a subfolder the game loads with no music and no
-  visible error beyond a console 404. If Dan asks to update Pillkill Tycoon
-  itself (new features, bug fixes, balance changes) — that's a different,
-  larger, self-contained game file with its own history; make those edits
-  directly to tycoon.html, not by rebuilding it here from scratch.
+  in the repo root next to index.html and tycoon.html itself. If Dan asks to
+  update Pillkill Tycoon itself (new features, bug fixes, balance changes) —
+  that's a different, larger, self-contained game file with its own history;
+  make those edits directly to tycoon.html, not by rebuilding it here.
 
 SITE STRUCTURE:
 - FILE 137 lore overlay: password "FILE137" (case-insensitive), gated PKPD
@@ -1223,26 +1664,14 @@ SITE STRUCTURE:
 - GAMES TAB (#games section, between Videos and Merch): a game-select screen
   (#games-select, two .game-card buttons) that swaps to either #clicker-view
   or #tycoon-view via showGameSelect()/playClicker()/playTycoon(). Only one
-  view is visible at a time; the other two get display:none. Each game view
-  has its own "[ ← BACK TO GAMES ]" button (.games-back) calling
-  showGameSelect(). The clicker's markup was relocated here from its old
-  standalone full-width section lower on the page — all of its element IDs
-  and JS logic are completely unchanged, so don't "fix" the clicker JS
-  thinking it's now broken by the move; it isn't, it just lives in a
-  different DOM location now. Pillkill Tycoon is NOT embedded inline — it
-  loads lazily into an <iframe id="tycoon-frame"> only once the player clicks
-  PLAY (frame.src is set on first playTycoon() call, not on page load), both
-  to avoid loading a large embedded-asset game file for visitors who never
-  play it, and because the tycoon game has its own WASD/keyboard handlers
-  that would otherwise conflict with this page's own keydown listeners
-  (Konami code, "pillkill" easter egg) if it weren't sandboxed in an iframe's
-  separate JS context. #tycoon-view deliberately overrides the section's
-  normal max-width:860px (via #games{max-width:none}) so the iframe can run
-  much wider (max 1300px) — Pillkill Tycoon's room layouts need more
-  horizontal space than the site's normal prose columns.
-- PILLKILL CLICKER (now inside #clicker-view, was previously its own
-  lower-page section): a cookie-clicker game themed around Buffalo Pill lore.
-  Key facts about its engine, learned the hard way:
+  view is visible at a time. Pillkill Tycoon loads lazily into
+  <iframe id="tycoon-frame"> only once PLAY is clicked, both to avoid loading
+  a large embedded-asset game for visitors who never play it, and because the
+  tycoon game has its own WASD/keyboard handlers that would otherwise conflict
+  with this page's own keydown listeners (Konami code, "pillkill" easter egg)
+  if it weren't sandboxed in an iframe's separate JS context.
+- PILLKILL CLICKER (inside #clicker-view): a cookie-clicker game themed
+  around Buffalo Pill lore. Key facts about its engine, learned the hard way:
     * Upgrade buttons are built ONCE at init with permanent onclick handlers
       (initUpgrades()). NEVER rebuild the upgrade DOM on every tick — this
       caused a real bug where rebuilding every 50ms wiped onclick handlers
@@ -1263,53 +1692,255 @@ SITE STRUCTURE:
       glascowman.wav — update this filename if Dan changes the giveaway song).
     * "Grandma Kanye" upgrade (baseCost 1, does nothing) spawns a floating
       photo (grandmakanye.jpg) that relocates to a random screen position every
-      ~9s with a fade-out/fade-in transition (NOT an instant teleport — that
-      was an earlier bug/complaint). Purely cosmetic.
+      ~9s with a fade-out/fade-in transition (NOT an instant teleport). Purely
+      cosmetic.
 
-VISUAL DIRECTION — THIS HAS CHANGED, READ CAREFULLY:
-- As of this edit, the ENTIRE site was deliberately desaturated to grayscale
-  for the nobody//EVERYBODY album era. Every formerly-red hex/rgba value
-  (--red: #cc0000 -> #707070, --red2: #ff1a1a -> #a8a8a8, plus ~50 hardcoded
-  glow/shadow rgba(200,0,0,...) etc values throughout the clicker and file
-  overlay CSS) was manually remapped to grayscale equivalents preserving
-  relative luminance. If asked to add color back, or to adjust the palette
-  again for a FUTURE album era, do a full audit with grep for hex/rgba colors
-  before assuming the CSS variables alone control everything — they don't;
-  many glow effects use hardcoded rgba() values that must be caught separately.
-- Also added a "dead and distorted" visual layer on top of the desaturation:
-  #vhs-track (sweeping scan line), #signal-flash (periodic full-screen glitch
-  flash via triggerGlitch(), fires randomly every 8-20s), body.desync class
-  (brief RGB-split/position jitter on glitch trigger), and .glitch-text class
-  (add this class + data-text attribute to any heading you want to randomly
-  corrupt a character or two of every few seconds — see corruptOnce()/
-  scheduleCorruption()). Currently applied to the nobody//EVERYBODY album
-  banner title. Feel free to extend to other headings if asked to intensify
-  the effect further, but don't overdo it to the point of hurting readability
-  or accessibility — Dan hasn't asked for that.
-- New .game-card / .games-back / #tycoon-frame styling (added this edit)
-  follows the same grayscale palette and hairline-border language as the rest
-  of the site (var(--border), var(--grey), var(--red)/--red2 accents on
-  hover) — keep any further Games-tab visual work consistent with that, not
-  a new visual language.
+VISUAL DIRECTION — THIS HAS CHANGED AGAIN, READ CAREFULLY:
+- The nobody//EVERYBODY-era grayscale/VHS treatment (desaturated palette,
+  scanline overlay, noise texture, #vhs-track sweep, #signal-flash glitch
+  flash, body.desync jitter, .glitch-text character corruption) has been
+  REMOVED entirely as of this edit, since that album is now out and Dan wants
+  a fresh, bright, colorful, energetic identity for "the new wave of Buffalo
+  Pill" rather than a look tied to one album era. Don't reintroduce any of
+  those effects unless specifically asked.
+- New palette: --bg:#0b0a12 (near-black, slight purple depth), --red:#ff2e63
+  (hot pink/red, primary accent), --red2:#ffb703 (gold, secondary accent),
+  --white:#f5f3fa, --grey:#8d89a0, --border:#241f36. Most of the site inherits
+  these via var(--red)/var(--red2)/etc, but glow/shadow effects in the hero
+  and clicker sections use hardcoded rgba() values matching this palette
+  (rgba(255,46,99,...) for pink glows, rgba(255,183,3,...) for gold glows,
+  rgba(0,194,255,...) cyan used sparingly for secondary depth/variety) — if
+  asked to change the palette again, grep for these literals, they don't
+  update automatically from the CSS variables.
+- The H1 "BUFFALO PILL" wordmark uses a pink-to-gold gradient text treatment
+  (background-clip:text) as the single boldest visual moment on the page —
+  keep the rest of the page comparatively restrained if extending this
+  further, don't add competing gradient treatments everywhere.
+- FILE 137 (the hidden PKPD case-file overlay) was DELIBERATELY KEPT in its
+  own dark red/grayscale "classified document" look, distinct from the bright
+  main site — this is intentional contrast (the easter egg should feel like
+  you've broken into something older/more serious), not an oversight. This
+  works via a scoped CSS variable override: `#file-overlay { --red: #d1273e;
+  --red2: #8a8a8a; }` — since --red/--red2 cascade, everything inside the
+  overlay automatically uses the muted red-alert tones instead of the main
+  site's hot pink/gold, with ONE line of CSS. The nav's "FILE 137" link
+  (.nav-file, outside the overlay) gets the same effect the same way: it sets
+  its own local `--red: #d1273e;`. If asked to further develop FILE 137,
+  keep using this pattern rather than hardcoding colors inline, and don't
+  "fix" it to match the bright site — that would undercut the reveal.
+- Emoji icons (game cards, pill button, milestones) are no longer desaturated
+  — the old `filter: grayscale(60%)` on .game-card-icon was removed so they
+  show full color, consistent with the rest of the refresh.
+- NINTH PASS (this edit) — actually wiring up the leaderboard, now that the
+  site is on GitHub Pages (static-only hosting, can't run the Worker code
+  itself). Split the backend out:
+    * leaderboard-worker.js (delivered alongside this file) is now a
+      COMPLETE standalone Cloudflare Worker — deploy it as its OWN worker
+      project (not merged into anything), bind a KV namespace to it, and it
+      gets a free https://*.workers.dev URL automatically. Full steps are
+      in that file's header comment. It includes CORS headers since the
+      site (buffalopill.com, on GitHub Pages) and the worker
+      (some-name.workers.dev) are now different origins — that's expected
+      and required, not a mistake.
+    * In THIS file, near the top of the clicker script, there's now:
+        const LEADERBOARD_API = '';
+      Dan needs to paste his deployed worker's URL in there (e.g.
+      'https://buffalopill-leaderboard.abcd.workers.dev', no trailing
+      slash). Until he does, every leaderboard function checks for an empty
+      LEADERBOARD_API first and shows "isn't set up yet" instead of a
+      confusing network error — don't remove those checks, and don't
+      hardcode a guessed URL, since I don't actually know his workers.dev
+      subdomain.
+    * Leaderboard list now shows medals (🥇🥈🥉) for the top 3 and, if the
+      current device's claimed username is ranked outside the visible
+      top 20, appends a separate "you" row at the bottom instead of just
+      not showing it.
+    * Stat numbers (pill count) now do a quick pop-scale animation on click
+      (popStat() + .stat-pop class) for a bit of tactile feedback.
+    * Hero blobs got wrapped in #hero-blobs-wrap so a scroll-based parallax
+      transform (in the same listener as the scroll-progress bar) doesn't
+      fight their existing individual float animations — transforming the
+      wrapper instead of each blob directly avoids a CSS animation vs.
+      inline-style conflict. If adding more hero background elements that
+      need parallax, add them inside that wrapper, not as siblings of it.
+    * FIXED: prestige() now calls hideGrandmaKanye() (clears her floating
+      interval and hides the element) in addition to resetting her upgrade
+      count to 0. Previously only the count reset — the already-spawned
+      floating element and its setInterval kept running forever after
+      prestige, so she'd keep wandering the screen even though the upgrade
+      list showed her as unbought. Re-buying her calls spawnGrandmaKanye()
+      again as before, which recreates a fresh interval since _interval was
+      cleared to null.
+    * Replaced native alert() popups on the lore map pins with a proper
+      in-theme modal (openPkpdModal()/closePkpdModal(), #pkpd-modal — sits
+      inside #file-overlay so it inherits the scoped muted-red palette).
+      closeFile() now also closes the modal so it can't get stuck open.
+    * Konami code now gives visual feedback (a toast + three confetti
+      bursts) instead of silently just playing secret.mp3 — some users
+      never noticed the code did anything before.
+    * Browser tab title now shows a live pill count ("💊 1.2K — Buffalo
+      Pill") once the visitor has played the clicker at all, even while
+      they're browsing other parts of the site (the passive-income interval
+      calls tick() every second regardless of which section is visible).
+      Reverts implicitly next page load; not persisted anywhere.
+    * Added a handful of ambient floating particles (pill emoji + sparkle)
+      drifting up through the hero for extra motion, layered with the
+      existing blobs/spotlight (z-index 1, same layer as the spotlight).
+- SEVENTH PASS (an earlier edit) — added a clicker leaderboard (panel in
+  .clicker-right, below prestige rewards). IMPORTANT: this needs a real
+  backend to work across visitors — a static index.html alone can't store
+  data persistently for anyone but the current browser. The client-side
+  code here (claimUsername/submitScore/autoSubmitScore/loadLeaderboard,
+  hitting /api/leaderboard) is only half of it; the other half is
+  leaderboard-worker-snippet.js (delivered alongside this file, not part of
+  it) — Dan needs to merge that routing logic into his actual Cloudflare
+  Worker and add a KV namespace binding (full instructions are in that
+  file's header comment) before the leaderboard will do anything but show
+  "Leaderboard server not connected yet." Until that's wired up, don't
+  "fix" the leaderboard by hardcoding fake fetch responses — the missing
+  piece is the real backend, not a bug in this file.
+    * Case-sensitive uniqueness comes for free from using the exact
+      username string as the KV key — "Dan" and "dan" are different keys,
+      so they can coexist, but nobody else can claim the exact same
+      capitalization once it's taken.
+    * Profanity filter: BANNED_SUBSTRINGS list + lbNormalize() catch common
+      leetspeak substitutions (0->o, 1->i, 3->e, 4->a, etc.) before
+      checking. This list exists client-side AND in the worker snippet —
+      keep them in sync if either is edited. The worker copy is the one
+      that actually enforces this (client-side is only instant UX feedback
+      and can be bypassed by calling the API directly).
+    * No real login/password system — see the "HONEST LIMITATION" note at
+      the top of leaderboard-worker-snippet.js for what that does and
+      doesn't protect against, and how to harden it later if needed.
+    * Scores auto-submit on every successful prestige (using the lifetime
+      total from just before the reset); there's also a manual "SUBMIT MY
+      SCORE" button for people who want to push an update without
+      prestiging.
+- FOURTH/FIFTH/SIXTH PASSES (content additions, then a lockdown, then a
+  partial un-lockdown) — current state as of this edit:
+    * Lyrics accordion, roadmap teasers, PKPD Wanted Board, and press/EPK
+      facts all live INSIDE #file-doc (FILE 137), as Sections 08-11 -
+      Dan wanted these gated behind the password, not sitting in the open.
+      The lyrics accordion (toggleLyrics() in the script) is DELIBERATELY
+      "Full lyrics coming soon" for every row - do not invent lyrics; paste
+      Dan's real ones into the relevant .lyrics-row-body <p> when provided.
+    * The Pillkill NV map (inline SVG, clickable pins, plain alert() popups
+      - swap for a nicer modal if asked to polish) lives inside FILE 137
+      Section 07, which already covered the location.
+    * Tour/Shows (#shows) and Merch (#merch) are PUBLIC, between Games and
+      Merch respectively, in that order - Dan explicitly said tour and
+      merch should NOT be behind the password, only the roadmap/map/lore
+      stuff. Don't move these back into FILE 137 without being asked again.
+    * The Tycoon Beta 2.0 teaser sits inside FILE 137 Section 11 alongside
+      the press facts (Section 11 title: "OPERATIONAL LOGISTICS - BETA &
+      MEDIA"). No leaderboard/backend was ever built for the clicker - Dan
+      confirmed that's fine to stay as-is (nonexistent, not something to
+      gate or build unless he asks for it specifically later).
+    * Discord banner (with its live "X online / Y members" count, pulled
+      client-side from discord.com/api/v9/invites/xdQH5X2x4j?with_counts=true
+      on page load) and the mailing list (with its "early snippets"
+      incentive copy) are PUBLIC - gating booking/contact-style content
+      behind a secret password would defeat their purpose.
+    * The top nav no longer has a "LORE" link (that standalone section was
+      removed when its content moved into FILE 137); FILE 137 access is via
+      the nav link, typing "pillkill" anywhere on the page, or the Konami
+      code. "PRESS" and "SHOWS" were never added to the nav (SHOWS is public
+      but reachable only by scrolling; PRESS is inside FILE 137 now anyway).
+    * Lesson from this back-and-forth: when a request lists specific items
+      plus "everything else," don't assume "everything else" sweeps in
+      content with an obvious separate public purpose (tour dates, contact
+      info) - ask rather than over-apply the instruction.
+- THIRD PASS (an earlier edit) — Dan removed the custom cursor entirely
+  (crosshair, then pointer, both scrapped — the site now uses whatever the browser does
+  by default; don't reintroduce a sitewide `cursor:` override without being
+  asked) and asked to make it "10x cooler." Added:
+    * #scroll-progress — a fixed 3px gradient bar at the very top of the
+      viewport that fills as the visitor scrolls the page (plain scroll
+      listener, no libraries).
+    * A spinning conic-gradient ring behind the hero profile photo
+      (.hero-img-wrap::before, @keyframes spin-ring) — sits behind the image
+      via z-index, image itself now has z-index:1 and a var(--bg)-colored
+      border instead of a solid pink border so the ring reads as a halo.
+    * Hero content now staggers in on load (@keyframes fade-up, applied with
+      increasing animation-delay to hero-img-wrap -> hero-tag -> h1 ->
+      hero-sub -> hero-cta) instead of just appearing instantly.
+    * .btn elements have a cursor-tracked radial "magnetic glow" — a JS
+      mousemove listener sets --mx/--my CSS custom properties per button,
+      and a ::after pseudo-element uses those to draw a soft light that
+      follows the pointer inside the button (btn needs overflow:hidden for
+      this, which is fine, buttons have no overflowing content).
+    * Ticker text is bigger and now rendered in the pink->gold gradient via
+      background-clip:text instead of flat pink.
+    * Clicker pill clicks now spawn a small confetti burst (spawnConfetti(x,y)
+      in the script, called from clickPill) — plain DOM nodes animated via
+      the Web Animations API and removed on finish. This does NOT touch
+      #pill-btn itself (no transform/scale/overflow added to it or its
+      ancestors) — the confetti particles are separate siblings appended to
+      <body>, same pattern as the existing pill-click-float number popup, so
+      it doesn't conflict with the hard-won pill-btn bugs documented below.
+- SECOND PASS (an earlier edit) — Dan asked to make it "even fresher":
+  bolder/more animated AND less boxy/more modern layout. What changed:
+    * Design tokens added: --gradient (pink->gold), --r-sm/--r-md/--r-lg/
+      --r-pill radius scale. Buttons are now pill-shaped (border-radius:
+      var(--r-pill)) with a gradient fill on .btn-primary and a translateY
+      hover lift. Cards (game-card, social-item, mail-block, merch-inner,
+      album-banner) got border-radius + hover lift + soft colored shadows
+      instead of flat hairline borders. iframes/video embeds got rounded
+      corners too.
+    * Nav is now a floating frosted-glass pill bar (position fixed with
+      margin instead of flush edge-to-edge, backdrop-filter: blur, rounded
+      full pill shape) instead of a hard edge-to-edge bar.
+    * Hero got three blurred, slow-animating gradient "blob" divs
+      (.hero-blob-1/2/3, @keyframes blob-float-1/2/3) behind the content for
+      ambient motion, plus a gentle floating bob on the profile photo
+      (@keyframes hero-float — this is on .hero-img-wrap, NOT on #pill-btn,
+      so it doesn't conflict with the clicker's "no transform on pill-btn"
+      rule below). H1 size increased further.
+    * `<hr class="rule">` no longer renders a hard line — it's a horizontal
+      gradient-fade (transparent -> border color -> transparent) for an
+      airier, less "90s web" feel. No HTML changes needed for this, just CSS.
+    * Section vertical padding increased (more whitespace between sections),
+      h2 sizes bumped up slightly.
+    * Scroll-reveal added: elements with class="reveal" (major sections,
+      the album banner, game cards, social items) fade/slide up into view via
+      a small IntersectionObserver at the bottom of the script. Cards have a
+      slight nth-child transition-delay for a staggered cascade. If adding
+      new sections/cards, add class="reveal" to opt them in — it's additive,
+      won't affect anything without the class.
+    * FILE 137 and the clicker's #pill-btn mechanics were deliberately left
+      alone in this pass — FILE 137 keeps its distinct dark/red-alert look
+      (see above), and #pill-btn still avoids overflow:hidden and
+      transform/scale per the hard-won bug notes below. Only outer
+      containers around the clicker (stats bar, upgrades panel, prestige
+      zone) got corner-rounding for visual consistency with the rest of the
+      refreshed site.
 
 ALBUM / RELEASE TIMELINE (keep this updated as things ship):
-- MANUFACTURED CONSENT: released June 2026. Previous/most recent album.
-  Spotify album ID 4G2ilJCHmRs9nTvENbZLIn. Track 07 "RADIO SILENT" was cut
-  before release for legal reasons; it exists only as a standalone single/
-  video (YouTube ID gQyjohMuEyY). This is now baked into the PKPD lore as a
-  running mystery — don't accidentally "fix" or explain it away.
-- nobody//EVERYBODY: NEXT album, announced release date AUGUST 11, 2026.
-  Countdown timer targets 2026-08-11T00:00:00 in the album-banner section.
-  12 tracks: 1. nobody, 2. YDOBON (feat. MC TWIXX), 3. Voided (feat. MK
-  Ultra), 4. Ghost (feat. Cid Kudi), 5. Heaven (feat. Drizzy Drozz),
-  6. Saturated (feat. Shamama), 7. GLITCH, 8. The Aftermath Theory (feat. MK
-  Ultra, MC TWIXX), 9. SCREAMER (feat. MC TWIXX), 10. METHODIST (feat. Felony
-  Steve), 11. EVERYBODY, 12. Ghost (Nightmare Mix). Note tracks 4 and 12 are
-  both titled "Ghost" — intentional, referenced in FILE 137 discography entry.
-  Once Aug 11 passes (or Dan says it's out), swap "// INCOMING //" banner
-  label to "// OUT NOW //", update the countdown block to a stream-now CTA,
-  and promote it to "// LATEST ALBUM //" in the music section, demoting
-  Manufactured Consent one tier down like RADIO SILENT was demoted before it.
+- MANUFACTURED CONSENT: released June 2026. Previous album. Spotify album ID
+  4G2ilJCHmRs9nTvENbZLIn. Track 07 "RADIO SILENT" was cut before release for
+  legal reasons; exists only as a standalone single/video (YouTube ID
+  gQyjohMuEyY). Baked into the PKPD lore as a running mystery — don't
+  "fix" or explain it away.
+- nobody//EVERYBODY: RELEASED August 11, 2026 (this edit updates the site to
+  reflect that it's out, not upcoming — banner now reads "// OUT NOW //" with
+  direct streaming links instead of a countdown, and it's promoted to
+  "// LATEST ALBUM //" in the music section). No specific Spotify album ID was
+  available for this one at the time of this edit, so its CTAs point at the
+  artist-level Spotify/Apple Music pages (0KT9MzDOenp2Fa2TbUAJSL /
+  buffalo-pill/1853023050) rather than an album-specific embed — swap in a
+  direct album link/embed if Dan provides one. 12 tracks: 1. nobody,
+  2. YDOBON (feat. MC TWIXX), 3. Voided (feat. MK Ultra), 4. Ghost (feat. Cid
+  Kudi), 5. Heaven (feat. Drizzy Drozz), 6. Saturated (feat. Shamama),
+  7. GLITCH, 8. The Aftermath Theory (feat. MK Ultra, MC TWIXX), 9. SCREAMER
+  (feat. MC TWIXX), 10. METHODIST (feat. Felony Steve), 11. EVERYBODY,
+  12. Ghost (Nightmare Mix). Tracks 4 and 12 are both titled "Ghost" —
+  intentional, referenced in the FILE 137 discography entry.
+- Whenever the NEXT album is announced, give IT the "// INCOMING //" banner
+  treatment with a countdown (that pattern's still fine to reuse for a
+  genuinely upcoming release — it just no longer applies to
+  nobody//EVERYBODY), and demote nobody//EVERYBODY to "// PREVIOUS ALBUM //",
+  moving Manufactured Consent down again the same way RADIO SILENT was
+  demoted before it.
 
 BUFFALO PILL LORE UNIVERSE (for any future creative/copy work):
 - Fictional hometown: Pillkill, NV (doesn't officially exist per the bit).
